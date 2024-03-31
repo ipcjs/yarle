@@ -47,6 +47,7 @@ export interface YarleOptions {
     monospaceIsCodeBlock?: boolean;
     dateFormat?: string;
     nestedTags?: TagSeparatorReplaceOptions;
+    nestedNotebookSeparator?: string;
     imageSizeFormat?: ImageSizeFormat;
     keepImageSize?: boolean;
     keepOriginalAmountOfNewlines?: boolean;

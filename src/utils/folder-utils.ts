@@ -130,6 +130,9 @@ export const setPaths = (enexSource: string): void => {
   // loggerInfo(`enex folder split: ${JSON.stringify(enexFolder)}`);
   let enexFile = (enexFolder.length >= 1 ?  enexFolder[enexFolder.length - 1] : enexFolder[0]).split(/.enex$/)[0];
   enexFile = normalizeFilenameString(enexFile);
+  if (yarleOptions.nestedNotebookSeparator) {
+    enexFile = enexFile.replace(yarleOptions.nestedNotebookSeparator, path.sep)
+  }
   // loggerInfo(`enex file: ${enexFile}`);
 
   const outputDir = path.isAbsolute(yarleOptions.outputDir)
