@@ -24,7 +24,7 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
     }
     for (const [linkName, linkProps] of Object.entries(allLinks)) {
         const uniqueId = linkProps.uniqueEnd;
-        let fileName = (linkProps as any)['title'];
+        let fileName = linkProps.title;
         if (allconvertedFiles.find(fn => fn.includes(uniqueId))) {
             fileName = truncatFileName(fileName, uniqueId);
         }
@@ -34,7 +34,7 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
             })
             fileName = getClosestFileName(fileName, fileNames);
         }
-        const notebookName: string = (linkProps as any)['notebookName'];
+        const notebookName: string = linkProps.notebookName;
         const encodedFileName = options.urlEncodeFileNamesAndLinks ? encodeURI(fileName as string) : fileName as string;
         let linkDoesntExist = !allconvertedFiles.find(convertedFile => convertedFile.endsWith(`${encodedFileName}.md`));
 
@@ -85,8 +85,17 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
 
                 }
                 else {
-                    const regexp = new RegExp(escapeStringRegexp(linkName), 'g');
-                    updatedContent = updatedContent.replace(regexp, realFileNameInContent);
+                    const escapedLinkName = escapeStringRegexp(linkName)
+                    const regexp = new RegExp(`${escapedLinkName}|\\[\\[(${escapedLinkName})(\\.md)?\\|(.+?)\\]\\]`, 'g');
+                    updatedContent = updatedContent.replace(regexp, (str, link, ext = '', name) => {
+                        if (name) {
+                            // Make sure the link is shortest
+                            return name === realFileNameInContent
+                                ? `[[${realFileNameInContent}${ext}]]`
+                                : `[[${realFileNameInContent}${ext}|${name}]]`
+                        }
+                        return realFileNameInContent;
+                    });
                 }
                 
                 if ((`${fileName}.md` === targetFile || targetFile === linkProps.title) &&
@@ -94,12 +103,12 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
                     (notebookFolder.endsWith(notebookName)||options.outputFormat === OutputFormat.LogSeqMD)){
                     // TODO APPLY EVERNOTE LINK 
                     const evernoteInternalLinkPlaceholderRegExp = new RegExp('<YARLE_EVERNOTE_LINK_PLACEHOLDER>', 'g');
-                    updatedContent = updatedContent.replace(evernoteInternalLinkPlaceholderRegExp, (linkProps as any)['url']);
+                    updatedContent = updatedContent.replace(evernoteInternalLinkPlaceholderRegExp, linkProps.url);
 
 
                     // TODO APPLY EVERNOTE GUID 
                     const evernoteGuidPlaceholderRegExp = new RegExp('<YARLE_EVERNOTE_GUID_PLACEHOLDER>', 'g');
-                    updatedContent = updatedContent.replace(evernoteGuidPlaceholderRegExp, (linkProps as any)['guid']);
+                    updatedContent = updatedContent.replace(evernoteGuidPlaceholderRegExp, linkProps.guid);
                 }
                 if (fileContent !== updatedContent) {
                     const filePath = `${notebookFolder}${path.sep}${targetFile}`;

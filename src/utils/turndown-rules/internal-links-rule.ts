@@ -1,4 +1,4 @@
-import marked, { Token } from 'marked';
+import marked, { Token as LinkToken } from 'marked';
 import * as _ from 'lodash';
 
 import { getUniqueId, normalizeFilenameString } from '../filename-utils';
@@ -11,7 +11,6 @@ import { filterByNodeName } from './filter-by-nodename';
 import { getAttributeProxy } from './get-attribute-proxy';
 import { isTOC } from './../../utils/is-toc';
 import { isHeptaOrObsidianOutput } from './../../utils/is-hepta-or-obsidian-output';
-import sanitize from 'sanitize-filename';
 
 export const removeBrackets = (str: string): string => {
     return str.replace(/\[|\]/g, '');
@@ -48,9 +47,13 @@ const getEvernoteUniqueId = (value: string): string => {
         ? [urlSpl[0],urlSpl[1]]
         : [urlSpl[1],urlSpl[2]]).join('/')
 }
+interface MyLinkToken {
+    text: string;
+    mdKeyword: string;
+}
 export const wikiStyleLinksRule = {
     filter: filterByNodeName('A'),
-    replacement: (content: any, node: any) => {
+    replacement: (content: any, node: HTMLElement) => {
         const nodeProxy = getAttributeProxy(node);
         let internalTurndownedContent =
             getTurndownService(yarleOptions).turndown(removeBrackets(node.innerHTML));
@@ -64,13 +67,13 @@ export const wikiStyleLinksRule = {
         const lexer = new marked.Lexer({});
         const tokens = lexer.lex(internalTurndownedContent) as any;
         const extension = yarleOptions.addExtensionToInternalLinks ? '.md' : '';
-        let token: any = {
+        let token: MyLinkToken = {
             mdKeyword: '',
             text: internalTurndownedContent,
         };
         if (tokens.length > 0 && tokens[0]['type'] === 'heading') {
             token = tokens[0];
-            token['mdKeyword'] = `${'#'.repeat(tokens[0]['depth'])} `;
+            token.mdKeyword = `${'#'.repeat(tokens[0]['depth'])} `;
         }
         const value = nodeProxy.href ? nodeProxy.href.value : internalTurndownedContent;
         const type = nodeProxy.type ? nodeProxy.type.value : undefined ;
@@ -87,17 +90,17 @@ export const wikiStyleLinksRule = {
             return getShortLinkIfPossible(token, value);
         }
 
-        const displayName = sanitize(token['text'], {replacement: yarleOptions.replacementChar || '_'}).replace(/[\[\]\#\^]/g, '')
-
-        const mdKeyword = token['mdKeyword'];
+        const mdKeyword = token.mdKeyword;
 
         // handle ObsidianMD internal link display name
         const omitObsidianLinksDisplayName = isHeptaOrObsidianOutput()
             && yarleOptions.obsidianSettings?.omitLinkDisplayName;
-        const renderedObsidianDisplayName = omitObsidianLinksDisplayName ? '' : `|${displayName}`;
+        const buildObsidianLink = (link: string, name?: string, extension = '',) => omitObsidianLinksDisplayName || !name || link === name
+            ? `${mdKeyword}[[${link}${extension}]]`
+            : `${mdKeyword}[[${link}${extension}|${name}]]`
 
         if (isValueEvernoteLink) {
-            const fileName = normalizeFilenameString(token['text']);
+            const fileName = normalizeFilenameString(token.text);
             const noteIdNameMap = RuntimePropertiesSingleton.getInstance();
             const uniqueEnd = getUniqueId();
             const id = getEvernoteUniqueId(value)
@@ -110,25 +113,25 @@ export const wikiStyleLinksRule = {
 
             const linkedNoteId = id; // todo add evernotelink value
             if (isHeptaOrObsidianOutput() && !yarleOptions.keepEvernoteLinkIfNoNoteFound) {
-                return `${mdKeyword}[[${linkedNoteId}${extension}${renderedObsidianDisplayName}]]`;
+                return buildObsidianLink(linkedNoteId, fileName, extension);
             }
             if (yarleOptions.keepEvernoteLinkIfNoNoteFound){
-                return `<YARLE_EVERNOTE_LINK>${mdKeyword}[[${linkedNoteId}${extension}${renderedObsidianDisplayName}]]<-->[${displayName}](${linkedNoteId}${extension})</YARLE_EVERNOTE_LINK>`
+                return `<YARLE_EVERNOTE_LINK>${buildObsidianLink(linkedNoteId, fileName, extension)}<-->[${token.text}](${linkedNoteId}${extension})</YARLE_EVERNOTE_LINK>`
             }
 
-            return `${mdKeyword}[${displayName}](${linkedNoteId}${extension})`;
+            return `${mdKeyword}[${token.text}](${linkedNoteId}${extension})`;
         }
 
         return (isHeptaOrObsidianOutput())
-        ? `${mdKeyword}[[${realValue}${renderedObsidianDisplayName}]]`
-        : (yarleOptions.outputFormat === OutputFormat.StandardMD || yarleOptions.outputFormat === OutputFormat.LogSeqMD)
-            ? `${mdKeyword}[${displayName}](${realValue})`
-            : `${mdKeyword}[[${realValue}]]`;
+            ? buildObsidianLink(realValue, token.text)
+            : (yarleOptions.outputFormat === OutputFormat.StandardMD || yarleOptions.outputFormat === OutputFormat.LogSeqMD)
+                ? `${mdKeyword}[${token.text}](${realValue})`
+                :buildObsidianLink(realValue);
     },
 };
 
-export const getShortLinkIfPossible = (token: any, value: string): string => {
-    return (!token['text'] || _.unescape(token['text']) === _.unescape(value))
-                ? yarleOptions.generateNakedUrls ? value : `<${value}>`
-                : `${token['mdKeyword']}[${token['text']}](${value})`;
+export const getShortLinkIfPossible = (token: MyLinkToken, value: string): string => {
+    return (!token.text || _.unescape(token.text) === _.unescape(value))
+        ? yarleOptions.generateNakedUrls ? value : `<${value}>`
+        : `${token.mdKeyword}[${token.text}](${value})`;
 };
