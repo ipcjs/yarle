@@ -5,7 +5,6 @@ import { CharacterMap } from 'CharacterMap';
 import { ImageSizeFormat } from 'image-size-format';
 
 export interface YarleOptions {
-    enexDir?: string; // used by command line
     enexSources?: Array<string>; // used by the UI
     templateFile?: string;
     currentTemplate?: string;

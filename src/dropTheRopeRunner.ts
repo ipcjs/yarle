@@ -22,17 +22,20 @@ export const run = async (opts?: YarleOptions) => {
         : `${__dirname}/../config.json`;
     console.log(`Loading config from ${configFile}`);
     const options: YarleOptions = {...require(configFile), ...opts};
-    if (options.enexSources.length === 1 && options.enexSources[0].endsWith('.enex')) {
-        loggerInfo(`Converting notes in file: ${options.enexSources}`);
-    } else {
-        const enexFiles = fs
-            .readdirSync(options.enexSources[0])
-            .filter((file: any) => {
-                return file.match(/.*\.enex/ig);
-            });
 
-        options.enexSources = enexFiles.map(enexFile => `${options.enexSources[0]}${path.sep}${enexFile}`);
-    }
+    const isEnexFile = (path: string) => path.toLowerCase().endsWith('.enex')
+    options.enexSources = options.enexSources.reduce((arr, source) => {
+        if (isEnexFile(source)) {
+            arr.push(source)
+        } else {
+            arr.push(...fs.readdirSync(source)
+                .filter(isEnexFile)
+                .map((enexFile) => `${source}${path.sep}${enexFile}`))
+        }
+        return arr
+    }, [])
+    loggerInfo(`Converting notes in files: ${options.enexSources}`);
+
     const outputNotebookFolders = await yarle.dropTheRope(options);
 
     // POSTPROCESSES 
