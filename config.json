@@ -1,6 +1,7 @@
 {
     "enexSources": [
-        "./test-template.enex"
+        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Dart.enex",
+        "C:\\Users\\ipcjs\\Desktop\\Notes\\TOC.enex"
     ],
     "templateFile": "./sampleTemplate.tmpl",
     "outputDir": "out",
@@ -19,7 +20,7 @@
     "skipSourceUrl": false,
     "skipWebClips": false,
     "skipTags": false,
-    "useHashTags": true,
+    "useHashTags": false,
     "outputFormat": "ObsidianMD",
     "taskOutputFormat": "ObsidianMD",
     "imageSizeFormat": "ObsidianMD",
@@ -35,18 +36,17 @@
     "useLevenshteinForLinks": false,
     "keepEvernoteLinkIfNoNoteFound": false,
     "convertColorsToMDHighlight": false,
-
     "replacementChar": "_",
     "replacementCharacterMap": {
-        "<": "_",
-        ">": "_",
-        ":": "_",
-        "\"": "_",
-        "/": "_",
-        "\\": "_", 
-        "|": "_",
-        "?": "_",
-        "*": "_"
+        "<": "＜",
+        ">": "＞",
+        ":": "：",
+        "\"": "＂",
+        "/": "／",
+        "\\": "＼", 
+        "|": "｜",
+        "?": "？",
+        "*": "＊"
     },
     "globalReplacementSettings": [
         {
@@ -68,11 +68,12 @@
     },
     "nestedTags": {
         "separatorInEN": "_",
-        "replaceSeparatorWith": "---",
+        "replaceSeparatorWith": "/",
         "replaceSpaceWith": "-"
     },
-    "resourcesDir": "",
+    "nestedNotebookSeparator": "@@@",
+    "resourcesDir": ".resources",
     "keepMDCharactersOfENNotes": false,
     "monospaceIsCodeBlock": false,
-    "dateFormat": "YYYY-MM-DD"
+    "dateFormat": "YYYY-MM-DDTHH:mm:ss"
 }
