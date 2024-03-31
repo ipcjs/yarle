@@ -158,8 +158,10 @@ export const getNoteName = (dstPath: string, note: any): string => {
 };
 
 export const getNotebookName = (enexFile: string): string => {
-  const notebookName = normalizeFilenameString(path.basename(enexFile, '.enex'));
-
+  let notebookName = normalizeFilenameString(path.basename(enexFile, '.enex'));
+  if (yarleOptions.nestedNotebookSeparator) {
+    notebookName = notebookName.replace(yarleOptions.nestedNotebookSeparator, path.sep)
+  }
   return notebookName;
 };
 
