@@ -86,13 +86,13 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
                 }
                 else {
                     const escapedLinkName = escapeStringRegexp(linkName)
-                    const regexp = new RegExp(`${escapedLinkName}|\\[\\[(${escapedLinkName})(\\.md)?\\|(.+?)\\]\\]`, 'g');
-                    updatedContent = updatedContent.replace(regexp, (str, link, ext = '', name) => {
+                    const regexp = new RegExp(`${escapedLinkName}|\\[\\[(${escapedLinkName})(\\.md)?(\\\\?\\|)(.+?)\\]\\]`, 'g');
+                    updatedContent = updatedContent.replace(regexp, (str, link, ext = '', sep, name) => {
                         if (name) {
                             // Make sure the link is shortest
                             return name === realFileNameInContent
                                 ? `[[${realFileNameInContent}${ext}]]`
-                                : `[[${realFileNameInContent}${ext}|${name}]]`
+                                : `[[${realFileNameInContent}${ext}${sep}${name}]]`
                         }
                         return realFileNameInContent;
                     });
