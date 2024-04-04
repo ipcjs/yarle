@@ -31,7 +31,7 @@ const isEvernoteLink = (value: string): boolean => {
         const pathSpl = url.pathname.split('/').filter(Boolean); // Split and removes empty strings
         if (pathSpl[0] !== 'view' || pathSpl.length < 4) return false;
         return true;
-    } else if ((url.protocol === 'http:' || url.protocol === 'https:') && url.host === 'www.evernote.com') {
+    } else if (!yarleOptions.keepEvernoteExternalLinks && (url.protocol === 'http:' || url.protocol === 'https:') && url.host === 'www.evernote.com') {
         // External link format: https://www.evernote.com/shard/s714/nl/92167309/00ba720b-e3f1-49fd-9b43-5d915a3bca8a/
         const pathSpl = url.pathname.split('/').filter(Boolean); // Removes empty strings
         if (pathSpl[0] !== 'shard' || pathSpl.length < 5) return false;

@@ -61,6 +61,7 @@ export interface YarleOptions {
     useUniqueUnknownFileNames?: boolean;
     useLevenshteinForLinks?: boolean;
     keepEvernoteLinkIfNoNoteFound?: boolean;
+    keepEvernoteExternalLinks?: boolean;
     convertColorsToMDHighlight?: boolean;
     globalReplacementSettings?: Array<SearchAndReplace>;
 }

@@ -1,6 +1,7 @@
 {
     "enexSources": [
-        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Coding@@@JavaScript.enex"
+        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Coding@@@JavaScript.enex",
+        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Coding@@@Dart.enex"
     ],
     "templateFile": "./sampleTemplate.tmpl",
     "outputDir": "out",
@@ -101,6 +102,7 @@
     "nestedNotebookSeparator": "@@@",
     "resourcesDir": "resources",
     "keepMDCharactersOfENNotes": false,
+    "keepEvernoteExternalLinks": true,
     "monospaceIsCodeBlock": false,
     "dateFormat": "YYYY-MM-DDTHH:mm:ss"
 }
