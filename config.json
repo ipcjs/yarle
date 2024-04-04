@@ -1,7 +1,6 @@
 {
     "enexSources": [
-        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Coding@@@JavaScript.enex",
-        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Coding@@@Dart.enex"
+        "C:\\Users\\ipcjs\\Desktop\\Notes"
     ],
     "templateFile": "./sampleTemplate.tmpl",
     "outputDir": "out",

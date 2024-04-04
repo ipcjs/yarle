@@ -10,6 +10,7 @@ import { loggerInfo } from './utils/loggerInfo';
 import { clearLogFile } from './utils/clearLogFile';
 import { applyLinks } from './utils/apply-links';
 import { LanguageFactory } from './outputLanguages/LanguageFactory';
+import { recursiveReaddirSync } from './utils/file-utils';
 
 export const run = async (opts?: YarleOptions) => {
     clearLogFile();
@@ -28,12 +29,12 @@ export const run = async (opts?: YarleOptions) => {
         if (isEnexFile(source)) {
             arr.push(source)
         } else {
-            arr.push(...fs.readdirSync(source)
+            arr.push(...[...recursiveReaddirSync(source)]
                 .filter(isEnexFile)
                 .map((enexFile) => `${source}${path.sep}${enexFile}`))
         }
         return arr
-    }, [])
+    }, [] as string[])
     loggerInfo(`Converting notes in files: ${options.enexSources}`);
 
     const outputNotebookFolders = await yarle.dropTheRope(options);
