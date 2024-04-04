@@ -30,8 +30,7 @@ export const run = async (opts?: YarleOptions) => {
             arr.push(source)
         } else {
             arr.push(...[...recursiveReaddirSync(source)]
-                .filter(isEnexFile)
-                .map((enexFile) => `${source}${path.sep}${enexFile}`))
+                .filter(isEnexFile))
         }
         return arr
     }, [] as string[])
