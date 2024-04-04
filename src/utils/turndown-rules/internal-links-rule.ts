@@ -64,16 +64,19 @@ export const wikiStyleLinksRule = {
                 : internalTurndownedContent;
         }
 
-        const lexer = new marked.Lexer({});
-        const tokens = lexer.lex(internalTurndownedContent) as any;
         const extension = yarleOptions.addExtensionToInternalLinks ? '.md' : '';
         let token: MyLinkToken = {
             mdKeyword: '',
             text: internalTurndownedContent,
         };
-        if (tokens.length > 0 && tokens[0]['type'] === 'heading') {
-            token = tokens[0];
-            token.mdKeyword = `${'#'.repeat(tokens[0]['depth'])} `;
+        if (node.children.length) {
+            // Handling complex link with other elements
+            const lexer = new marked.Lexer({});
+            const tokens = lexer.lex(internalTurndownedContent) as any;
+            if (tokens.length > 0 && tokens[0]['type'] === 'heading') {
+                token = tokens[0];
+                token.mdKeyword = `${'#'.repeat(tokens[0]['depth'])} `;
+            }
         }
         const value = nodeProxy.href ? nodeProxy.href.value : internalTurndownedContent;
         const type = nodeProxy.type ? nodeProxy.type.value : undefined ;
