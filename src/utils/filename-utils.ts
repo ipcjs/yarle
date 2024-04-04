@@ -14,36 +14,18 @@ import { getCreationTime } from './content-utils';
 import { escapeStringRegexp } from './escape-string-regexp';
 import { isLogseqJournal } from './is-logseq-journal';
 import { closest } from 'fastest-levenshtein';
-
-const applyCharacterMapSafely = (title: string): string => {
-  return applyCharacterMap(title).replace(/[/\\?%*:|"<>\[\]\+]/g, '-');
-}
-const applyCharacterMap = (title: string): string => {
-  let appliedTitle = title;
-  try{
-    for (const key of Object.keys(yarleOptions.replacementCharacterMap)){
-      const replacement = yarleOptions.replacementCharacterMap[key as any];
-
-      const regex: RegExp = new RegExp(escapeStringRegexp(key), 'g');
-      appliedTitle = appliedTitle.replace(regex, replacement)
-    }
-  }catch(e){
-    console.log(e)
-  }
-  console.log(appliedTitle)
-  return appliedTitle;
-}
+import { CharacterMap } from '../CharacterMap';
 
 export const normalizeFilenameString = (title: string) => {
   // Allow setting a specific replacement character for file and resource names
   // Default to a retrocompatible value
-  const normalizedTitle = sanitize(applyCharacterMap(title), {replacement: yarleOptions.replacementChar || '_'}).replace(/[\[\]\#\^]/g, '')
+  const normalizedTitle = sanitize(CharacterMap.apply(yarleOptions.replacementCharacterMap, title), {replacement: yarleOptions.replacementChar || '_'}).replace(/[\[\]\#\^]/g, '')
   console.log(normalizedTitle)
   return normalizedTitle;
   ;
 };
 
-export const getFileIndex = (dstPath: string, fileNamePrefix: string): number | string => {
+export const getFileIndex = (dstPath: string, fileNamePrefix: string): number => {
   const index = fs
     .readdirSync(dstPath)
     .filter(file => {
@@ -70,8 +52,8 @@ export const getResourceFileProperties = (workDir: string, resource: any): Resou
 			? fileNamePrefix.slice(0, lastIdx)
 			: fileNamePrefix;fileNamePrefix.includes('.') ? fileNamePrefix.split('.').slice(0, -1).join('.') : fileNamePrefix;
   }
-  fileName = applyCharacterMapSafely(fileName);
-  extension = applyCharacterMapSafely(extension);
+  fileName = CharacterMap.applySafely(yarleOptions.replacementCharacterMap, fileName);
+  extension = CharacterMap.applySafely(yarleOptions.replacementCharacterMap, extension);
   if (yarleOptions.sanitizeResourceNameSpaces) {
     fileName = fileName.replace(/ /g, yarleOptions.replacementChar);
   }

@@ -8,6 +8,7 @@ import { EvernoteNoteData, NoteData } from './../models';
 import { getHtmlFileLink } from './folder-utils';
 import { escapeStringRegexp } from './escape-string-regexp';
 import { OutputFormat } from './../output-format';
+import { CharacterMap } from '../CharacterMap';
 
 export const getMetadata = (note: EvernoteNoteData, notebookName: string): MetaData => {
 
@@ -95,16 +96,21 @@ export const logTags = (note: EvernoteNoteData): string => {
     const tagOptions = yarleOptions.nestedTags;
 
     const tags = tagArray.map((tag: any) => {
-      let cleanTag = tag
-        .toString()
-        .replace(/^#/, '');
-      if (tagOptions) {
-        cleanTag = cleanTag.replace(new RegExp(escapeStringRegexp(tagOptions.separatorInEN), 'g'), tagOptions.replaceSeparatorWith);
+      let cleanTag: string
+      if (tagOptions?.characterMap) {
+        cleanTag = CharacterMap.apply(tagOptions.characterMap, tag.toString())
+      } else {
+        cleanTag = tag
+          .toString()
+          .replace(/^#/, '');
+        if (tagOptions) {
+          cleanTag = cleanTag.replace(new RegExp(escapeStringRegexp(tagOptions.separatorInEN), 'g'), tagOptions.replaceSeparatorWith);
+        }
+
+        const replaceSpaceWith = (tagOptions && tagOptions.replaceSpaceWith) || '-';
+
+        cleanTag = cleanTag.replace(/ /g, replaceSpaceWith);
       }
-
-      const replaceSpaceWith = (tagOptions && tagOptions.replaceSpaceWith) || '-';
-
-      cleanTag = cleanTag.replace(/ /g, replaceSpaceWith);
       return `${yarleOptions.useHashTags ? '#' : ''}${cleanTag}`;
     });
 

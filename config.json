@@ -1,7 +1,6 @@
 {
     "enexSources": [
-        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Dart.enex",
-        "C:\\Users\\ipcjs\\Desktop\\Notes\\TOC.enex"
+        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Coding@@@Dart.enex"
     ],
     "templateFile": "./sampleTemplate.tmpl",
     "outputDir": "out",
@@ -67,9 +66,26 @@
         "omitLinkDisplayName": false
     },
     "nestedTags": {
-        "separatorInEN": "_",
-        "replaceSeparatorWith": "/",
-        "replaceSpaceWith": "-"
+        "separatorInEN": "/",
+        "replaceSeparatorWith": "／",
+        "replaceSpaceWith": "_",
+        "characterMap": {
+            " / ": "／",
+            "<": "＜",
+            ">": "＞",
+            ":": "：",
+            "\"": "＂",
+            "/": "／",
+            "\\": "＼", 
+            "|": "｜",
+            "?": "？",
+            "*": "＊",
+            " (": "（",
+            ") ": "）",
+            "(": "（",
+            ")": "）",
+            " ": "_"
+        }
     },
     "nestedNotebookSeparator": "@@@",
     "resourcesDir": ".resources",
