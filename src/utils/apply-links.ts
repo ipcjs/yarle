@@ -12,8 +12,8 @@ import { isTanaOutput } from './tana/is-tana-output';
 import { updateFileContentSafely } from './file-utils';
 import { getClosestFileName } from './filename-utils';
 import { LanguageFactory } from './../outputLanguages/LanguageFactory';
-import { TOCNoteName } from './../constants'
 import { OutputFormat } from './../output-format';
+import { isTOC } from './is-toc';
 
 export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<string>): void => {
     const linkNameMap = RuntimePropertiesSingleton.getInstance();
@@ -98,9 +98,9 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
                     });
                 }
                 
-                if ((`${fileName}.md` === targetFile || targetFile === linkProps.title) &&
-                    linkProps.noteName === TOCNoteName &&
-                    (notebookFolder.endsWith(notebookName)||options.outputFormat === OutputFormat.LogSeqMD)){
+                if ((`${fileName}.md` === targetFile || targetFile === linkProps.title) 
+                    && isTOC(linkProps.noteName)
+                    && (notebookFolder.endsWith(notebookName) || options.outputFormat === OutputFormat.LogSeqMD)) {
                     // TODO APPLY EVERNOTE LINK 
                     const evernoteInternalLinkPlaceholderRegExp = new RegExp('<YARLE_EVERNOTE_LINK_PLACEHOLDER>', 'g');
                     updatedContent = updatedContent.replace(evernoteInternalLinkPlaceholderRegExp, linkProps.url);
