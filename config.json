@@ -1,6 +1,6 @@
 {
     "enexSources": [
-        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Coding@@@Dart.enex"
+        "C:\\Users\\ipcjs\\Desktop\\Notes\\Coding\\Coding@@@JavaScript.enex"
     ],
     "templateFile": "./sampleTemplate.tmpl",
     "outputDir": "out",
@@ -37,12 +37,17 @@
     "convertColorsToMDHighlight": false,
     "replacementChar": "_",
     "replacementCharacterMap": {
+        " <": "＜",
         "<": "＜",
+        "> ": "＞",
         ">": "＞",
+        ": ": "：",
         ":": "：",
         "\"": "＂",
+        " / ": "／",
         "/": "／",
         "\\": "＼", 
+        " | ": "｜",
         "|": "｜",
         "?": "？",
         "*": "＊"
@@ -70,13 +75,17 @@
         "replaceSeparatorWith": "／",
         "replaceSpaceWith": "_",
         "characterMap": {
-            " / ": "／",
+            " <": "＜",
             "<": "＜",
+            "> ": "＞",
             ">": "＞",
+            ": ": "：",
             ":": "：",
             "\"": "＂",
+            " / ": "／",
             "/": "／",
             "\\": "＼", 
+            " | ": "｜",
             "|": "｜",
             "?": "？",
             "*": "＊",
@@ -88,7 +97,7 @@
         }
     },
     "nestedNotebookSeparator": "@@@",
-    "resourcesDir": ".resources",
+    "resourcesDir": "resources",
     "keepMDCharactersOfENNotes": false,
     "monospaceIsCodeBlock": false,
     "dateFormat": "YYYY-MM-DDTHH:mm:ss"
