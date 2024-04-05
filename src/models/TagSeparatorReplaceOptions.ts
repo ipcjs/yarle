@@ -1,4 +1,4 @@
-import { CharacterMap } from "CharacterMap";
+import { CharacterMap } from "../CharacterMap";
 
 export interface TagSeparatorReplaceOptions {
     characterMap?: CharacterMap;
