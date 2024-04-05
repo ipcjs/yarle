@@ -20,10 +20,15 @@ import { EvernoteNoteData } from '../models';
 export const normalizeFilenameString = (title: string) => {
   // Allow setting a specific replacement character for file and resource names
   // Default to a retrocompatible value
-  const normalizedTitle = sanitize(CharacterMap.apply(yarleOptions.replacementCharacterMap, title), {replacement: yarleOptions.replacementChar || '_'}).replace(/[\[\]\#\^]/g, '')
-  console.log(normalizedTitle)
+  let normalizedTitle = sanitize(CharacterMap.apply(yarleOptions.replacementCharacterMap, title), { replacement: yarleOptions.replacementChar || '_' })
+    .replace(/[\[\]\#\^]/g, '') // match characters that interferes with links: [ ] # | ^
+  if (yarleOptions.outputFormat === OutputFormat.ObsidianMD) {
+    // Obsidian cann't recognize hidden files starting with a dot.
+    // @see https://forum.obsidian.md/t/enable-use-of-hidden-files-and-folders-starting-with-a-dot-dotfiles-dotfolders-within-obsidian/26908
+    normalizedTitle = normalizedTitle.replace(/^\.+/, '')
+  }
+  console.log(normalizedTitle);
   return normalizedTitle;
-  ;
 };
 
 export const getFileIndex = (dstPath: string, fileNamePrefix: string): number => {
