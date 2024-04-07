@@ -43,7 +43,8 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
             let realFileNameInContent = encodedFileName;
             if (notebookName && (!notebookFolder.endsWith(notebookName)|| options.outputFormat === OutputFormat.LogSeqMD)) {
                 realFileName = `${notebookName}${encodedFileName}`;
-                realFileNameInContent = `${notebookName}/${encodedFileName}`;
+                // Ensure use `/` as separator
+                realFileNameInContent = `${notebookName.replace(/\\/g, '/')}/${encodedFileName}`;
             }
             const filesInOutputDir = fs.readdirSync(notebookFolder);
             console.log(`Files in output dir: ${JSON.stringify(filesInOutputDir)}`);
