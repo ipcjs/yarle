@@ -11,7 +11,7 @@ export class ObsidianMD extends StandardMD implements Language  {
         italic: '_',
         highlight: '==',
         strikethrough: '~~',
-        listItem: '* '
+        listItem: '- '
     };
 
 }
