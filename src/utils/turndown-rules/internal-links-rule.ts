@@ -55,9 +55,7 @@ export const wikiStyleLinksRule = {
     filter: filterByNodeName('A'),
     replacement: (content: any, node: HTMLElement) => {
         const nodeProxy = getAttributeProxy(node);
-        let internalTurndownedContent =
-            getTurndownService(yarleOptions).turndown(removeBrackets(node.innerHTML));
-        internalTurndownedContent = removeDoubleBackSlashes(internalTurndownedContent);
+        let internalTurndownedContent = getTurndownService(yarleOptions).turndown(node.innerHTML);
         if (!nodeProxy.href) {
             return (node.innerHTML === '' || !node.innerHTML)
                 ? ''
