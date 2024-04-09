@@ -9,6 +9,10 @@
             "request": "launch",
             "name": "Command Line",
             "program": "${workspaceFolder}/dist/dropTheRope.js",
+            "args": [
+                "--configFile",
+                "./config.obsidian.json"
+            ],
             "preLaunchTask": "npm: build:watch",
         },
     ]

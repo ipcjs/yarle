@@ -1,8 +1,8 @@
 {
     "enexSources": [
-        "./test-template.enex"
+        "C:\\Users\\ipcjs\\Desktop\\Notes\\Test"
     ],
-    "templateFile": "./sampleTemplate.tmpl",
+    "templateFile": "./sampleTemplate_obsidian.tmpl",
     "outputDir": "out",
     "keepOriginalHtml": false,
     "isMetadataNeeded": false,
@@ -19,7 +19,7 @@
     "skipSourceUrl": false,
     "skipWebClips": false,
     "skipTags": false,
-    "useHashTags": true,
+    "useHashTags": false,
     "outputFormat": "ObsidianMD",
     "taskOutputFormat": "ObsidianMD",
     "imageSizeFormat": "ObsidianMD",
@@ -35,18 +35,23 @@
     "useLevenshteinForLinks": false,
     "keepEvernoteLinkIfNoNoteFound": false,
     "convertColorsToMDHighlight": false,
-
     "replacementChar": "_",
     "replacementCharacterMap": {
-        "<": "_",
-        ">": "_",
-        ":": "_",
-        "\"": "_",
-        "/": "_",
-        "\\": "_", 
-        "|": "_",
-        "?": "_",
-        "*": "_"
+        " <": "＜",
+        "<": "＜",
+        "> ": "＞",
+        ">": "＞",
+        ": ": "：",
+        ":": "：",
+        "\"": "＂",
+        " / ": "／",
+        "/": "／",
+        " \\ ": "＼", 
+        "\\": "＼", 
+        " | ": "｜",
+        "|": "｜",
+        "?": "？",
+        "*": "＊"
     },
     "globalReplacementSettings": [
         {
@@ -67,12 +72,36 @@
         "omitLinkDisplayName": false
     },
     "nestedTags": {
-        "separatorInEN": "_",
-        "replaceSeparatorWith": "---",
-        "replaceSpaceWith": "-"
+        "separatorInEN": "/",
+        "replaceSeparatorWith": "／",
+        "replaceSpaceWith": "_",
+        "characterMap": {
+            " <": "＜",
+            "<": "＜",
+            "> ": "＞",
+            ">": "＞",
+            ": ": "：",
+            ":": "：",
+            "\"": "＂",
+            " / ": "／",
+            "/": "／",
+            " \\ ": "＼", 
+            "\\": "＼", 
+            " | ": "｜",
+            "|": "｜",
+            "?": "？",
+            "*": "＊",
+            " (": "（",
+            "(": "（",
+            ") ": "）",
+            ")": "）",
+            " ": "_"
+        }
     },
-    "resourcesDir": "",
+    "nestedNotebookSeparator": "@@@",
+    "resourcesDir": "resources",
     "keepMDCharactersOfENNotes": false,
+    "keepEvernoteExternalLinks": true,
     "monospaceIsCodeBlock": false,
-    "dateFormat": "YYYY-MM-DD"
+    "dateFormat": "YYYY-MM-DDTHH:mm:ss"
 }
