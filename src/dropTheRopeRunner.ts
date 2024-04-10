@@ -3,6 +3,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { omit } from 'lodash';
 
 import * as yarle from './yarle';
 import { YarleOptions } from './YarleOptions';
@@ -21,8 +22,12 @@ export const run = async (opts?: YarleOptions) => {
             ? argv['configFile']
             : `${process.cwd()}/${argv['configFile']}`
         : `${__dirname}/../config.json`;
+    const argOptions = omit(argv, 'configFile', '_')
+    if (typeof argOptions.enexSources === 'string') {
+        argOptions.enexSources = [argOptions.enexSources]
+    }
     console.log(`Loading config from ${configFile}`);
-    const options: YarleOptions = {...require(configFile), ...opts};
+    const options: YarleOptions = { ...require(configFile), ...argOptions, ...opts };
 
     const isEnexFile = (path: string) => path.toLowerCase().endsWith('.enex')
     options.enexSources = options.enexSources.reduce((arr, source) => {

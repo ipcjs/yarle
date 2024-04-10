@@ -7,11 +7,20 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Command Line",
+            "name": "cmd",
+            "program": "${workspaceFolder}/dist/dropTheRope.js",
+            "preLaunchTask": "npm: build:watch",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "cmd:obsidian",
             "program": "${workspaceFolder}/dist/dropTheRope.js",
             "args": [
                 "--configFile",
-                "./config.obsidian.json"
+                "./config.obsidian.json",
+                // "--enexSources", "C:\\Users\\ipcjs\\Desktop\\Notes\\Evernote",
+                // "--enexSources", "C:\\Users\\ipcjs\\Desktop\\Notes\\Test",
             ],
             "preLaunchTask": "npm: build:watch",
         },
