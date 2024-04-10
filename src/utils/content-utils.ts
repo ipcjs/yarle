@@ -109,6 +109,9 @@ export const logTags = (note: EvernoteNoteData): string => {
         const replaceSpaceWith = (tagOptions && tagOptions.replaceSpaceWith) || '-';
 
         cleanTag = cleanTag.replace(/ /g, replaceSpaceWith);
+        if (yarleOptions.outputFormat === OutputFormat.ObsidianMD) {
+          cleanTag = cleanTag.replace(/[^\w/\\-]/gu, '')
+        }
       }
       return `${yarleOptions.useHashTags ? '#' : ''}${cleanTag}`;
     });
