@@ -75,6 +75,15 @@ export const getTurndownService = (yarleOptions: YarleOptions) => {
     }
     if (yarleOptions.keepMDCharactersOfENNotes) {
         turndownService.escape = ((str: string) => str);
+    } else {
+        const escapes = [...defaultEscapes]
+        if (yarleOptions.outputFormat === OutputFormat.ObsidianMD) {
+            escapes.push([/</g, '\\<'])
+            escapes.push([/_+\b|\b_+/g, (sub) => sub.replace(/_/g, '\\_')])
+        } else {
+            escapes.push([/_/g, '\\_'])
+        }
+        turndownService.escape = createEscapeFn(escapes)
     }
 
     turndownService.addRule('divBlock', divRule);
@@ -93,3 +102,28 @@ export const getTurndownService = (yarleOptions: YarleOptions) => {
 
     return turndownService;
 };
+
+type ReplaceArgs = [RegExp, string | ((substring: string, ...args: any[]) => string)]
+/** @see https://github.com/mixmark-io/turndown/blob/7bcda25b914a3322da27add78d079cb3a3cfb022/src/turndown.js/#L7 */
+const defaultEscapes: ReplaceArgs[] = [
+    [/\\/g, '\\\\'],
+    [/\*/g, '\\*'],
+    [/^-/g, '\\-'],
+    [/^\+ /g, '\\+ '],
+    [/^(=+)/g, '\\$1'],
+    [/^(#{1,6}) /g, '\\$1 '],
+    [/`/g, '\\`'],
+    [/^~~~/g, '\\~~~'],
+    [/\[/g, '\\['],
+    [/\]/g, '\\]'],
+    [/^>/g, '\\>'],
+    // [/_/g, '\\_'],
+    [/^(\d+)\. /g, '$1\\. '],
+]
+
+const createEscapeFn = (escapes: ReplaceArgs[]) => {
+    return (string: string) => escapes.reduce(
+        (accumulator, escape) => accumulator.replace(escape[0], escape[1] as any),
+        string,
+    );
+}
