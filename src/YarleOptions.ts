@@ -10,6 +10,7 @@ export interface YarleOptions {
     currentTemplate?: string;
     outputDir?: string;
     keepOriginalHtml?: boolean;
+    posixHtmlPath?: boolean;
     isMetadataNeeded?: boolean;
     isNotebookNameNeeded?: boolean;
     isZettelkastenNeeded?: boolean;
