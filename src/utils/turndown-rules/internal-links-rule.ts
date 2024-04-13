@@ -101,7 +101,7 @@ export const wikiStyleLinksRule = {
             : `${mdKeyword}[[${link}${extension}|${name}]]`
 
         if (isValueEvernoteLink) {
-            const fileName = normalizeFilenameString(token.text);
+            const fileName = normalizeFilenameString(removeDoubleBackSlashes(token.text));
             const noteIdNameMap = RuntimePropertiesSingleton.getInstance();
             const uniqueEnd = getUniqueId();
             const id = getEvernoteUniqueId(value)
