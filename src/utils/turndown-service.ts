@@ -79,8 +79,10 @@ export const getTurndownService = (yarleOptions: YarleOptions) => {
         const escapes = [...defaultEscapes]
         if (yarleOptions.outputFormat === OutputFormat.ObsidianMD) {
             escapes.push([/</g, '\\<'])
+            escapes.push([/(~{2,})/g, (sub) => sub.replace(/(~{1,2})/g, '\\$1')])
             escapes.push([/_+\b|\b_+/g, (sub) => sub.replace(/_/g, '\\_')])
         } else {
+            escapes.push([/^~~~/g, '\\~~~'])
             escapes.push([/_/g, '\\_'])
         }
         turndownService.escape = createEscapeFn(escapes)
@@ -113,7 +115,7 @@ const defaultEscapes: ReplaceArgs[] = [
     [/^(=+)/g, '\\$1'],
     [/^(#{1,6}) /g, '\\$1 '],
     [/`/g, '\\`'],
-    [/^~~~/g, '\\~~~'],
+    // [/^~~~/g, '\\~~~'],
     [/\[/g, '\\['],
     [/\]/g, '\\]'],
     [/^>/g, '\\>'],
