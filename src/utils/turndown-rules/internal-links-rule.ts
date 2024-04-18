@@ -132,7 +132,9 @@ export const wikiStyleLinksRule = {
 };
 
 export const getShortLinkIfPossible = (token: MyLinkToken, value: string): string => {
-    return (!token.text || _.unescape(token.text) === _.unescape(value))
+    return (_.unescape(token.text) === _.unescape(value))
         ? yarleOptions.generateNakedUrls ? value : `<${value}>`
-        : `${token.mdKeyword}[${token.text}](${value})`;
+        : !token.text
+            ? '' // Remove links that don't contain text.
+            : `${token.mdKeyword}[${token.text}](${value})`;
 };
