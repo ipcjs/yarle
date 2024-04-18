@@ -12,11 +12,15 @@ import { getAttributeProxy } from './get-attribute-proxy';
 import { isTOC } from './../../utils/is-toc';
 import { isHeptaOrObsidianOutput } from './../../utils/is-hepta-or-obsidian-output';
 
-export const removeBrackets = (str: string): string => {
-    return str.replace(/\[|\]/g, '');
-};
-export const removeDoubleBackSlashes = (str: string): string => {
-    return str.replace(/\\/g, '');
+export const replaceBracketsForWikiLink = (str: string): string => {
+    // Only a single bracket can exist in a wiki link.
+    return str
+        .replace(/\[+/g, '[')
+        .replace(/\]+/g, ']')
+        .replace(/\]$/, '] ')
+}
+export const replaceBackSlashes = (str: string): string => {
+    return str.replace(/\\(.)/g, '$1');
 };
 const isEvernoteLink = (value: string): boolean => {
     let url;
@@ -87,7 +91,7 @@ export const wikiStyleLinksRule = {
 
         const url: string = nodeProxy.href ? nodeProxy.href.value : internalTurndownedContent;
         const realUrl = yarleOptions.urlEncodeFileNamesAndLinks ? encodeURI(url) : url;
-        
+
         const type = nodeProxy.type ? nodeProxy.type.value : undefined;
         const isYarleResource = Boolean(node.getAttribute('yarle-file-resource'))
         if (type === 'file' || isYarleResource) {
@@ -97,7 +101,7 @@ export const wikiStyleLinksRule = {
         }
 
         if (isEvernoteLink(url)) {
-            const fileName = normalizeFilenameString(removeDoubleBackSlashes(text));
+            const fileName = normalizeFilenameString(replaceBackSlashes(text));
             const noteIdNameMap = RuntimePropertiesSingleton.getInstance();
             const uniqueEnd = getUniqueId();
             const id = getEvernoteUniqueId(url)
@@ -112,7 +116,7 @@ export const wikiStyleLinksRule = {
                 return `<YARLE_EVERNOTE_LINK>${buildWikiLink(linkedNoteId, fileName)}<-->[${text}](${linkedNoteId}${extension})</YARLE_EVERNOTE_LINK>`
             }
             if (isHeptaOrObsidianOutput()) {
-                return buildWikiLink(linkedNoteId, fileName);
+                return buildWikiLink(linkedNoteId, text);
             }
             return `${headingPrefix}[${text}](${linkedNoteId}${extension})`;
         }

@@ -10,10 +10,11 @@ import { escapeStringRegexp } from './escape-string-regexp';
 import { getAllOutputFilesWithExtension } from './get-all-output-files';
 import { isTanaOutput } from './tana/is-tana-output';
 import { updateFileContentSafely } from './file-utils';
-import { getClosestFileName } from './filename-utils';
+import { getClosestFileName, normalizeFilenameString } from './filename-utils';
 import { LanguageFactory } from './../outputLanguages/LanguageFactory';
 import { OutputFormat } from './../output-format';
 import { isTOC } from './is-toc';
+import { replaceBackSlashes, replaceBracketsForWikiLink } from './turndown-rules';
 
 export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<string>): void => {
     const linkNameMap = RuntimePropertiesSingleton.getInstance();
@@ -35,7 +36,7 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
             fileName = getClosestFileName(fileName, fileNames);
         }
         const notebookName: string = linkProps.notebookName;
-        const encodedFileName = options.urlEncodeFileNamesAndLinks ? encodeURI(fileName as string) : fileName as string;
+        const encodedFileName = options.urlEncodeFileNamesAndLinks ? encodeURI(fileName) : fileName;
         let linkDoesntExist = !allconvertedFiles.find(convertedFile => convertedFile.endsWith(`${encodedFileName}.md`));
 
         for (const notebookFolder of outputNotebookFolders) {
@@ -84,13 +85,19 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
                     }
                 } else {
                     const escapedLinkName = escapeStringRegexp(linkName)
-                    const regexp = new RegExp(`${escapedLinkName}|\\[\\[(${escapedLinkName})(\\.md)?(\\\\?\\|)(.+?)\\]\\]`, 'g');
+                    const regexp = new RegExp(`${escapedLinkName}|\\[\\[(${escapedLinkName})(\\.md)?(\\\\?\\|)(.*?(\\\\])?)\\]\\]`, 'g');
                     updatedContent = updatedContent.replace(regexp, (str, url, ext = '', sep, text) => {
                         if (text) {
-                            // Make sure the link is shortest
-                            return text === realFileNameInContent
-                                ? `[[${realFileNameInContent}${ext}]]`
-                                : `[[${realFileNameInContent}${ext}${sep}${text}]]`
+                            // Convert `text` to `_encodedFileName`. If it equals `realFileNameInContent`, we can use a shorter wiki link.
+                            const _fileName = normalizeFilenameString(replaceBackSlashes(text));
+                            const _encodedFileName = options.urlEncodeFileNamesAndLinks ? encodeURI(_fileName) : _fileName;
+                            if (_encodedFileName === realFileNameInContent) {
+                                return `[[${realFileNameInContent}${ext}]]`
+                            }
+                            const normalizedText = _encodedFileName === encodedFileName
+                                ? _encodedFileName
+                                : replaceBracketsForWikiLink(replaceBackSlashes(text))
+                            return `[[${realFileNameInContent}${ext}${sep}${normalizedText}]]`
                         }
                         return realFileNameInContent;
                     });
