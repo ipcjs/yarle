@@ -15,11 +15,11 @@ import { LanguageFactory } from './../outputLanguages/LanguageFactory';
 import { OutputFormat } from './../output-format';
 import { isTOC } from './is-toc';
 
-export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<string>): void => {
+export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<string>): void => {
     const linkNameMap = RuntimePropertiesSingleton.getInstance();
     const allLinks = linkNameMap.getAllNoteIdNameMap();
     const allconvertedFiles: Array<string> = [];
-    for (const outputFolder of outputNotebookFolders){
+    for (const outputFolder of outputNotebookFolders) {
         getAllOutputFilesWithExtension(outputFolder, allconvertedFiles, undefined);
     }
     for (const [linkName, linkProps] of Object.entries(allLinks)) {
@@ -28,7 +28,7 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
         if (allconvertedFiles.find(fn => fn.includes(uniqueId))) {
             fileName = truncatFileName(fileName, uniqueId);
         }
-        if (options.useLevenshteinForLinks){
+        if (options.useLevenshteinForLinks) {
             const fileNames = allconvertedFiles.map(convertedFileName => {
                 return convertedFileName.split(path.sep).reverse()[0].split('.')[0]
             })
@@ -41,7 +41,7 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
         for (const notebookFolder of outputNotebookFolders) {
             let realFileName = encodedFileName;
             let realFileNameInContent = encodedFileName;
-            if (notebookName && (!notebookFolder.endsWith(notebookName)|| options.outputFormat === OutputFormat.LogSeqMD)) {
+            if (notebookName && (!notebookFolder.endsWith(notebookName) || options.outputFormat === OutputFormat.LogSeqMD)) {
                 realFileName = `${notebookName}${encodedFileName}`;
                 // Ensure use `/` as separator
                 realFileNameInContent = `${notebookName.replace(/\\/g, '/')}/${encodedFileName}`;
@@ -50,7 +50,6 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
             console.log(`Files in output dir: ${JSON.stringify(filesInOutputDir)}`);
             console.log(`notebookFolder: ${notebookFolder}`);
             console.log(`realFileName: ${realFileName}`);
-
 
             const langaugeFactory = new LanguageFactory();
             const targetLanguage = langaugeFactory.createLanguage(options.outputFormat)
@@ -62,50 +61,47 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
             for (const targetFile of targetFiles) {
                 const fileContent = fs.readFileSync(`${notebookFolder}${path.sep}${targetFile}`, 'UTF-8');
                 let updatedContent = fileContent;
-                if (isTanaOutput()){
+                if (isTanaOutput()) {
                     const tanaNote = JSON.parse(updatedContent)
-                    const linkedNode  = tanaNote.nodes?.find( (note:any) => note.name === realFileNameInContent)
-                    if (linkedNode){
+                    const linkedNode = tanaNote.nodes?.find((note: any) => note.name === realFileNameInContent)
+                    if (linkedNode) {
                         const linkItem = linkNameMap.getNoteIdNameMapByNoteTitle(realFileNameInContent)
                         linkedNode.uid = linkItem[0].uniqueEnd
                         updatedContent = JSON.stringify(tanaNote)
                     }
 
                 }
-                if (options.keepEvernoteLinkIfNoNoteFound){
-                    if (linkDoesntExist){
+                if (options.keepEvernoteLinkIfNoNoteFound) {
+                    if (linkDoesntExist) {
                         const regexp = new RegExp(`<YARLE_EVERNOTE_LINK>(.)*<-->`)// replace
                         updatedContent = updatedContent.replace(regexp, '');
                         updatedContent = updatedContent.replace('</YARLE_EVERNOTE_LINK>', '');
 
-                    }else {
+                    } else {
                         const regexp = new RegExp(`<-->(.)*<\/YARLE_EVERNOTE_LINK>`)// replace
                         updatedContent = updatedContent.replace(regexp, '');
                         updatedContent = updatedContent.replace('<YARLE_EVERNOTE_LINK>', '');
                     }
-
-                }
-                else {
+                } else {
                     const escapedLinkName = escapeStringRegexp(linkName)
                     const regexp = new RegExp(`${escapedLinkName}|\\[\\[(${escapedLinkName})(\\.md)?(\\\\?\\|)(.+?)\\]\\]`, 'g');
-                    updatedContent = updatedContent.replace(regexp, (str, link, ext = '', sep, name) => {
-                        if (name) {
+                    updatedContent = updatedContent.replace(regexp, (str, url, ext = '', sep, text) => {
+                        if (text) {
                             // Make sure the link is shortest
-                            return name === realFileNameInContent
+                            return text === realFileNameInContent
                                 ? `[[${realFileNameInContent}${ext}]]`
-                                : `[[${realFileNameInContent}${ext}${sep}${name}]]`
+                                : `[[${realFileNameInContent}${ext}${sep}${text}]]`
                         }
                         return realFileNameInContent;
                     });
                 }
-                
-                if ((`${fileName}.md` === targetFile || targetFile === linkProps.title) 
+
+                if ((`${fileName}.md` === targetFile || targetFile === linkProps.title)
                     && isTOC(linkProps.noteName)
                     && (notebookFolder.endsWith(notebookName) || options.outputFormat === OutputFormat.LogSeqMD)) {
                     // TODO APPLY EVERNOTE LINK 
                     const evernoteInternalLinkPlaceholderRegExp = new RegExp('<YARLE_EVERNOTE_LINK_PLACEHOLDER>', 'g');
                     updatedContent = updatedContent.replace(evernoteInternalLinkPlaceholderRegExp, linkProps.url);
-
 
                     // TODO APPLY EVERNOTE GUID 
                     const evernoteGuidPlaceholderRegExp = new RegExp('<YARLE_EVERNOTE_GUID_PLACEHOLDER>', 'g');
@@ -114,15 +110,9 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
                 if (fileContent !== updatedContent) {
                     const filePath = `${notebookFolder}${path.sep}${targetFile}`;
                     updateFileContentSafely(filePath, updatedContent);
-                    
                 }
             }
-
-
         }
-
-
-
     }
     const unrecognizable = "Unrecognizable";
 
@@ -133,15 +123,13 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
         const evernoteInternalLinkPlaceholderRegExp = new RegExp('<YARLE_EVERNOTE_LINK_PLACEHOLDER>', 'g');
         let updatedContent = fileContent.replace(evernoteInternalLinkPlaceholderRegExp, unrecognizable);
 
-
         // TODO APPLY EVERNOTE GUID 
         const evernoteGuidPlaceholderRegExp = new RegExp('<YARLE_EVERNOTE_GUID_PLACEHOLDER>', 'g');
         updatedContent = updatedContent.replace(evernoteGuidPlaceholderRegExp, unrecognizable);
-    
-    if (fileContent !== updatedContent) {
-        updateFileContentSafely(targetFile, updatedContent);
-        
-    }
+
+        if (fileContent !== updatedContent) {
+            updateFileContentSafely(targetFile, updatedContent);
+        }
     }
 };
 

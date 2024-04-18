@@ -12,17 +12,17 @@ import { getAttributeProxy } from './get-attribute-proxy';
 import { isTOC } from './../../utils/is-toc';
 import { isHeptaOrObsidianOutput } from './../../utils/is-hepta-or-obsidian-output';
 
-export const removeBrackets = (str: string): string => {
+export const removeBrackets = (str: string): string => {
     return str.replace(/\[|\]/g, '');
 };
-export const removeDoubleBackSlashes = (str: string): string => {
+export const removeDoubleBackSlashes = (str: string): string => {
     return str.replace(/\\/g, '');
 };
 const isEvernoteLink = (value: string): boolean => {
     let url;
-    try {
+    try {
         url = new URL(value);
-    } catch(e){
+    } catch (e) {
         return false;
     }
     // NOTE: URL automatically converts to lowercase
@@ -44,13 +44,10 @@ const getEvernoteUniqueId = (value: string): string => {
         return value;
     const urlSpl = value.split('/').reverse()
     return ((urlSpl[0] !== '')
-        ? [urlSpl[0],urlSpl[1]]
-        : [urlSpl[1],urlSpl[2]]).join('/')
+        ? [urlSpl[0], urlSpl[1]]
+        : [urlSpl[1], urlSpl[2]]).join('/')
 }
-interface MyLinkToken {
-    text: string;
-    mdKeyword: string;
-}
+
 export const wikiStyleLinksRule = {
     filter: filterByNodeName('A'),
     replacement: (content: any, node: HTMLElement) => {
@@ -62,79 +59,73 @@ export const wikiStyleLinksRule = {
                 : internalTurndownedContent;
         }
 
+        // handle ObsidianMD internal link display name
+        const omitObsidianLinksDisplayName = isHeptaOrObsidianOutput() && yarleOptions.obsidianSettings?.omitLinkDisplayName;
         const extension = yarleOptions.addExtensionToInternalLinks ? '.md' : '';
-        let token: MyLinkToken = {
-            mdKeyword: '',
-            text: internalTurndownedContent,
-        };
+
+        let text = internalTurndownedContent;
+        let headingPrefix = '';
         if (node.children.length) {
             // Handling complex link with other elements
             const lexer = new marked.Lexer({});
             const tokens = lexer.lex(internalTurndownedContent) as any;
             if (tokens.length > 0 && tokens[0]['type'] === 'heading') {
-                token = tokens[0];
-                token.mdKeyword = `${'#'.repeat(tokens[0]['depth'])} `;
+                text = tokens[0].text;
+                headingPrefix = `${'#'.repeat(tokens[0]['depth'])} `;
             }
         }
-        const value = nodeProxy.href ? nodeProxy.href.value : internalTurndownedContent;
-        const type = nodeProxy.type ? nodeProxy.type.value : undefined ;
-        const realValue = yarleOptions.urlEncodeFileNamesAndLinks ? encodeURI(value) : value;
-        const isYarleResource =  Boolean(node.getAttribute('yarle-file-resource'))
+
+        const buildWikiLink = (url: string, text?: string) => omitObsidianLinksDisplayName || !text || url === text
+            ? `${headingPrefix}[[${url}${extension}]]`
+            : `${headingPrefix}[[${url}${extension}|${text}]]`;
+
+        const getShortLinkIfPossible = (url: string, text: string): string => (_.unescape(text) === _.unescape(url))
+            ? yarleOptions.generateNakedUrls ? url : `<${url}>`
+            : !text
+                ? '' // Remove links that don't contain text.
+                : `${headingPrefix}[${text}](${url})`;
+
+        const url: string = nodeProxy.href ? nodeProxy.href.value : internalTurndownedContent;
+        const realUrl = yarleOptions.urlEncodeFileNamesAndLinks ? encodeURI(url) : url;
+        
+        const type = nodeProxy.type ? nodeProxy.type.value : undefined;
+        const isYarleResource = Boolean(node.getAttribute('yarle-file-resource'))
         if (type === 'file' || isYarleResource) {
             return isHeptaOrObsidianOutput()
-                ? `![[${realValue}]]`
-                : getShortLinkIfPossible(token, value);
-        }
-        
-        const isValueEvernoteLink = isEvernoteLink(value);
-        if (value.match(/^(https?:|tel:|www\.|file:|busycalevent:|ftp:|mailto:)/) && !isValueEvernoteLink) {
-            return getShortLinkIfPossible(token, value);
+                ? `![[${realUrl}]]`
+                : getShortLinkIfPossible(url, text);
         }
 
-        const mdKeyword = token.mdKeyword;
-
-        // handle ObsidianMD internal link display name
-        const omitObsidianLinksDisplayName = isHeptaOrObsidianOutput()
-            && yarleOptions.obsidianSettings?.omitLinkDisplayName;
-        const buildObsidianLink = (link: string, name?: string, extension = '',) => omitObsidianLinksDisplayName || !name || link === name
-            ? `${mdKeyword}[[${link}${extension}]]`
-            : `${mdKeyword}[[${link}${extension}|${name}]]`
-
-        if (isValueEvernoteLink) {
-            const fileName = normalizeFilenameString(removeDoubleBackSlashes(token.text));
+        if (isEvernoteLink(url)) {
+            const fileName = normalizeFilenameString(removeDoubleBackSlashes(text));
             const noteIdNameMap = RuntimePropertiesSingleton.getInstance();
             const uniqueEnd = getUniqueId();
-            const id = getEvernoteUniqueId(value)
+            const id = getEvernoteUniqueId(url)
             if (isTOC(noteIdNameMap.getCurrentNoteName())) {
-                noteIdNameMap.addItemToTOCMap({ id, url: value, title: fileName, uniqueEnd  });
-
+                noteIdNameMap.addItemToTOCMap({ id, url, title: fileName, uniqueEnd });
             } else {
-                noteIdNameMap.addItemToMap({ id, url: value, title: fileName, uniqueEnd  });
+                noteIdNameMap.addItemToMap({ id, url, title: fileName, uniqueEnd });
             }
 
             const linkedNoteId = id; // todo add evernotelink value
-            if (isHeptaOrObsidianOutput() && !yarleOptions.keepEvernoteLinkIfNoNoteFound) {
-                return buildObsidianLink(linkedNoteId, fileName, extension);
+            if (yarleOptions.keepEvernoteLinkIfNoNoteFound) {
+                return `<YARLE_EVERNOTE_LINK>${buildWikiLink(linkedNoteId, fileName)}<-->[${text}](${linkedNoteId}${extension})</YARLE_EVERNOTE_LINK>`
             }
-            if (yarleOptions.keepEvernoteLinkIfNoNoteFound){
-                return `<YARLE_EVERNOTE_LINK>${buildObsidianLink(linkedNoteId, fileName, extension)}<-->[${token.text}](${linkedNoteId}${extension})</YARLE_EVERNOTE_LINK>`
+            if (isHeptaOrObsidianOutput()) {
+                return buildWikiLink(linkedNoteId, fileName);
             }
+            return `${headingPrefix}[${text}](${linkedNoteId}${extension})`;
+        }
 
-            return `${mdKeyword}[${token.text}](${linkedNoteId}${extension})`;
+        if (url.match(/^(https?:|tel:|www\.|file:|busycalevent:|ftp:|mailto:)/)) {
+            return getShortLinkIfPossible(url, text);
         }
 
         return (isHeptaOrObsidianOutput())
-            ? buildObsidianLink(realValue, token.text)
+            ? buildWikiLink(realUrl, text)
             : (yarleOptions.outputFormat === OutputFormat.StandardMD || yarleOptions.outputFormat === OutputFormat.LogSeqMD)
-                ? `${mdKeyword}[${token.text}](${realValue})`
-                :buildObsidianLink(realValue);
+                ? `${headingPrefix}[${text}](${realUrl})`
+                : buildWikiLink(realUrl);
     },
 };
 
-export const getShortLinkIfPossible = (token: MyLinkToken, value: string): string => {
-    return (_.unescape(token.text) === _.unescape(value))
-        ? yarleOptions.generateNakedUrls ? value : `<${value}>`
-        : !token.text
-            ? '' // Remove links that don't contain text.
-            : `${token.mdKeyword}[${token.text}](${value})`;
-};
