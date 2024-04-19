@@ -9,6 +9,7 @@ export interface YarleOptions {
     templateFile?: string;
     currentTemplate?: string;
     outputDir?: string;
+    outputMarkdownDirName?: string;
     keepOriginalHtml?: boolean;
     posixHtmlPath?: boolean;
     isMetadataNeeded?: boolean;

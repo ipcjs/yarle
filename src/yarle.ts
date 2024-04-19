@@ -30,6 +30,7 @@ import { EvernoteNoteData } from './models';
 export const defaultYarleOptions: YarleOptions = {
   enexSources: ['notebook.enex'],
   outputDir: './mdNotes',
+  outputMarkdownDirName: 'notes',
   keepOriginalHtml: false,
   posixHtmlPath: false,
   isMetadataNeeded: false,
