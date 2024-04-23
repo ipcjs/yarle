@@ -123,6 +123,9 @@ export const wikiStyleLinksRule = {
 
         if (url.match(/^(https?:|tel:|www\.|file:|busycalevent:|ftp:|mailto:)/)) {
             return getShortLinkIfPossible(url, text);
+        } else if (url === '#') {
+            // `#` is not valid url, ignore it
+            return text;
         } else if (url.startsWith('#')) {
             // starting with `#` may be an anchor link
             return `${headingPrefix}[${text}](${realUrl})`;
