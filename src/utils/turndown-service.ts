@@ -81,9 +81,11 @@ export const getTurndownService = (yarleOptions: YarleOptions) => {
             escapes.push([/%/g, '\\%'])
             escapes.push([/\$/g, '\\$$'])
             escapes.push([/</g, '\\<'])
+            escapes.push([/(={2,})/g, (sub) => sub.replace(/(={1,2})/g, '\\$1')])
             escapes.push([/(~{2,})/g, (sub) => sub.replace(/(~{1,2})/g, '\\$1')])
             escapes.push([/_+\b|\b_+/g, (sub) => sub.replace(/_/g, '\\_')])
         } else {
+            escapes.push([/^(=+)/g, '\\$1'])
             escapes.push([/^~~~/g, '\\~~~'])
             escapes.push([/_/g, '\\_'])
         }
@@ -114,7 +116,7 @@ const defaultEscapes: ReplaceArgs[] = [
     [/\*/g, '\\*'],
     [/^-/g, '\\-'],
     [/^\+ /g, '\\+ '],
-    [/^(=+)/g, '\\$1'],
+    // [/^(=+)/g, '\\$1'],
     [/^(#{1,6}) /g, '\\$1 '],
     [/`/g, '\\`'],
     // [/^~~~/g, '\\~~~'],
