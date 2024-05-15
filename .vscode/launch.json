@@ -19,7 +19,8 @@
             "args": [
                 "--configFile", "./config.obsidian.json",
                 // "--outputDir", "C:\\Users\\ipcjs\\Dropbox\\Notes",
-                // "--outputMarkdownDirName", "Evernote", "--enexSources", "K:\\Backup\\Evernote",
+                // "--outputDir", "C:\\Users\\ipcjs\\Dropbox\\Notes", "--outputMarkdownDirName", "Evernote", "--enexSources", "K:\\Backup\\Evernote",
+                // "--outputDir", "/Users/ipcjs/Library/CloudStorage/Dropbox/Notes", "--outputMarkdownDirName", "Evernote", "--enexSources", "/Volumes/Data/data/Evernote",
                 // "--enexSources", "K:\\Backup\\Evernote\\Coding\\Coding@@@Dart.enex",
                 // "--enexSources", "K:\\Backup\\Evernote\\Coding\\Coding@@@JavaScript.enex",
                 // "--enexSources", "K:\\Backup\\Evernote\\Others\\Others@@@移动设备笔记.enex",
@@ -28,6 +29,7 @@
                 // "--enexSources", "C:\\Users\\ipcjs\\Dropbox\\Notes\\yarle-test\\测试转义.enex",
                 // "--enexSources", "C:\\Users\\ipcjs\\Dropbox\\Notes\\yarle-test\\测试下划线.enex",
                 // "--enexSources", "C:\\Users\\ipcjs\\Dropbox\\Notes\\yarle-test\\测试带链接的图片.enex",
+                // "--enexSources", "/Volumes/Data/data/Evernote/Coding/Coding@@@Dart.enex"
             ],
             "preLaunchTask": "npm: build:watch",
         },
