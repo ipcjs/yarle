@@ -28,20 +28,10 @@ export class StandardMD implements Language {
 }
 
 
-const fixImagesInLink = (content: string):string => {
-    let updatedContent = cloneDeep(content);
+const fixImagesInLink = (content: string): string => {
     // Regular expression for the whole string with two groups
     const patternWholeString = /\[!\[\[(.*?)(?:\|(.*?))?\]\]\]\((.*?)\)/g;
-  
-    let match;
-    while ((match = patternWholeString.exec(content)) !== null) {
-      const bracketContent = match[1];
-      const dimensions = match[2] || ''; // Use empty string if dimensions are not present
-      const parenthesesContent = match[3];
-        updatedContent = (dimensions === "")
-          ? updatedContent.replace(`[![[${bracketContent}]]](${parenthesesContent})`, `![${parenthesesContent}](${bracketContent})`)
-          : updatedContent.replace(`[![[${bracketContent}|${dimensions}]]](${parenthesesContent})`, `![${parenthesesContent}\\|${dimensions}](${bracketContent})`)
-  
-    }
-    return updatedContent;
-  } 
+    return content.replace(patternWholeString, (str, imgLink, dimensions = '', link) => {
+        return `[![${dimensions}](${imgLink})](${link})`
+    })
+}

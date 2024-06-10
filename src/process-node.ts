@@ -13,7 +13,7 @@ import { prepareContentByExtractingDataUrlResources, processResources } from './
 import { convertHtml2MdContent } from './convert-html-to-md';
 import { convert2Html } from './convert-to-html';
 import { EvernoteNoteData, NoteData } from './models/NoteData';
-import { loggerInfo } from './utils/loggerInfo';
+import { loggerError, loggerInfo } from './utils/loggerInfo';
 import { RuntimePropertiesSingleton } from './runtime-properties';
 import { LanguageFactory } from './outputLanguages/LanguageFactory';
 import { performRegexpOnTitle } from './utils/get-title';
@@ -65,7 +65,7 @@ export const processNode = (pureNote: EvernoteNoteData, notebookName: string): v
 
   } catch (e) {
     // tslint:disable-next-line:no-console
-    loggerInfo(`Failed to convert note: ${noteData.title}, ${JSON.stringify(e)}`);
+    loggerError(`Failed to convert note: ${noteData.title}`, e);
   }
   // tslint:disable-next-line:no-console
   const dateFinished: Date = new Date();

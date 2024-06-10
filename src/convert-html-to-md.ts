@@ -92,14 +92,13 @@ export const convertHtml2MdContent = (yarleOptions: YarleOptions, htmlContent: s
     const contentNode = new JSDOM(fixSublistsInContent(content)).window.document
       .getElementsByTagName('en-note').item(0) as any as HTMLElement;
 
-    let contentInMd = getTurndownService(yarleOptions)
+    let contentInMd: string = getTurndownService(yarleOptions)
         .turndown(fixTasks(fixSublists(contentNode)));
 
     const newLinePlaceholder = new RegExp('<YARLE_NEWLINE_PLACEHOLDER>', 'g');
     contentInMd = contentInMd.replace(newLinePlaceholder, yarleOptions.convertPlainHtmlNewlines ? '\n': '');
 
     if (yarleOptions.outputFormat === OutputFormat.LogSeqMD) {
-
       contentInMd = contentInMd.replace(/\n/g, '\n- ') // add a "- " at each new line
       // .replace(/\r/g, '\n')
       .replace(/<br>/g, '[:br]')// fix new line in table
@@ -110,7 +109,9 @@ export const convertHtml2MdContent = (yarleOptions: YarleOptions, htmlContent: s
       .replace(/- \*\*__\*\*\n/g, '- \n');
 
       contentInMd = `- ${contentInMd}`; // the first line
-
+    } else if (yarleOptions.outputFormat === OutputFormat.ObsidianMD) {
+        // By inserting an `\`, prevent blank lines + indentation from being recognized as code blocks.
+        contentInMd = contentInMd.replace(/(\n)\s*(\n[\s ]{4,}\S)/g, '$1\\$2')
     }
 
     return contentInMd && contentInMd !== 'undefined' ? performRegexpOnContent(yarleOptions, contentInMd): '';

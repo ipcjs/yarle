@@ -33,3 +33,8 @@ export const loggerInfo = (message: string) => {
     }
     fs.appendFileSync(LOGFILE, `${message}${EOL}`);
 };
+
+export const loggerError = (message: string, e: any) => {
+  loggerInfo(`${message}\nError: ${e}`)
+  console.warn(message, e)
+}

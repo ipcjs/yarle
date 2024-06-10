@@ -5,11 +5,11 @@ import { CharacterMap } from 'CharacterMap';
 import { ImageSizeFormat } from 'image-size-format';
 
 export interface YarleOptions {
-    enexDir?: string; // used by command line
     enexSources?: Array<string>; // used by the UI
     templateFile?: string;
     currentTemplate?: string;
     outputDir?: string;
+    outputMarkdownDirName?: string;
     keepOriginalHtml?: boolean;
     posixHtmlPath?: boolean;
     isMetadataNeeded?: boolean;
@@ -49,6 +49,7 @@ export interface YarleOptions {
     monospaceIsCodeBlock?: boolean;
     dateFormat?: string;
     nestedTags?: TagSeparatorReplaceOptions;
+    nestedNotebookSeparator?: string;
     imageSizeFormat?: ImageSizeFormat;
     keepImageSize?: boolean;
     keepOriginalAmountOfNewlines?: boolean;
@@ -62,6 +63,7 @@ export interface YarleOptions {
     useUniqueUnknownFileNames?: boolean;
     useLevenshteinForLinks?: boolean;
     keepEvernoteLinkIfNoNoteFound?: boolean;
+    keepEvernoteExternalLinks?: boolean;
     convertColorsToMDHighlight?: boolean;
     globalReplacementSettings?: Array<SearchAndReplace>;
 }
