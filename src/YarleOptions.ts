@@ -66,4 +66,5 @@ export interface YarleOptions {
     keepEvernoteExternalLinks?: boolean;
     convertColorsToMDHighlight?: boolean;
     globalReplacementSettings?: Array<SearchAndReplace>;
+    indentCharacter?: string;
 }

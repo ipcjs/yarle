@@ -61,6 +61,7 @@ export const defaultYarleOptions: YarleOptions = {
   turndownOptions: {
     headingStyle: 'atx',
   },
+  indentCharacter: '	',
 };
 
 export let yarleOptions: YarleOptions = { ...defaultYarleOptions };
