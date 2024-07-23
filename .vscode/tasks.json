@@ -5,7 +5,17 @@
 			"type": "npm",
 			"script": "build:watch",
 			"group": "build",
-			"problemMatcher": [],
+			"problemMatcher": {
+				"base": "$tsc-watch",
+				"background": {
+					 "beginsPattern":{
+						"regexp": "\\[nodemon\\] starting"
+					 },
+					 "endsPattern":{
+						"regexp": "waiting for changes before restart"
+					 }
+				}
+			},
 			"isBackground": true,
 			"label": "npm: build:watch",
 		}

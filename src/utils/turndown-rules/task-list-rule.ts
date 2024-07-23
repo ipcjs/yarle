@@ -8,24 +8,27 @@ export const taskListRule = {
     filter: 'li',
     replacement: (content: string, node: HTMLLIElement, options: any) => {
 
-        const isTodoDoneBlock = (node: any)  => {
+        const isTodoDoneBlock = (node: any) => {
             const nodeProxy = getAttributeProxy(node);
             const taskFlag = '--en-checked:true;';
 
             return nodeProxy.style && nodeProxy.style.value.indexOf(taskFlag) >= 0;
         };
-        const isTodoBlock = (node: any)  => {
+        const isTodoBlock = (node: any) => {
             const nodeProxy = getAttributeProxy(node);
             const taskFlag = '--en-checked:false;';
 
             return nodeProxy.style && nodeProxy.style.value.indexOf(taskFlag) >= 0;
         };
 
-        const indentCount  = content.match(/^\n*/)[0].length || 0;
+        const indentCount = content.match(/^\n*/)[0].length || 0;
         const indentChars = yarleOptions.indentCharacter.repeat(indentCount);
 
-        const todoPrefix = yarleOptions.outputFormat === OutputFormat.LogSeqMD ? '' :
-        node.parentElement?.nodeName?.toUpperCase() === 'LI' ? '' : `${indentChars}- `;
+        const todoPrefix = yarleOptions.outputFormat === OutputFormat.LogSeqMD
+            ? ''
+            : node.parentElement?.nodeName?.toUpperCase() === 'LI'
+                ? ''
+                : `${indentChars}- `;
 
 
         const singleLineContent = content
@@ -34,14 +37,13 @@ export const taskListRule = {
             .replace(/\n/gm, `\n${yarleOptions.indentCharacter}`); // Indent
         const languageItems = getLanguageItems(yarleOptions.outputFormat);
 
-        let prefix =  indentCount > 0
+        let prefix = indentCount > 0
             ? indentChars
             : (isTodoDoneBlock(node)
                 ? `${checkboxDone} `
                 : (isTodoBlock(node)
                     ? `${checkboxTodo} `
-                    : languageItems.listItem))
-                    ;
+                    : languageItems.listItem));
         const parent = node.parentNode;
         if (parent.nodeName === 'OL') {
             const start = (parent as HTMLOListElement).getAttribute('start');
@@ -54,4 +56,5 @@ export const taskListRule = {
         ret = (prefix + singleLineContent + (node.nextSibling && !/\n$/.test(singleLineContent) ? '\n' : ''));
 
         return ret;
-}};
+    }
+};
