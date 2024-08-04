@@ -60,7 +60,7 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
                 return path.extname(file).toLowerCase() === extension;
             });
             for (const targetFile of targetFiles) {
-                const fileContent = fs.readFileSync(`${notebookFolder}${path.sep}${targetFile}`, 'UTF-8');
+                const fileContent = fs.readFileSync(`${notebookFolder}${path.sep}${targetFile}`, 'utf-8');
                 let updatedContent = fileContent;
                 if (isTanaOutput()) {
                     const tanaNote = JSON.parse(updatedContent)
@@ -124,7 +124,7 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
     const unrecognizable = "Unrecognizable";
 
     for (const targetFile of allconvertedFiles) {
-        const fileContent = fs.readFileSync(targetFile, 'UTF-8');
+        const fileContent = fs.readFileSync(targetFile, 'utf-8');
 
         // TODO APPLY EVERNOTE LINK 
         const evernoteInternalLinkPlaceholderRegExp = new RegExp('<YARLE_EVERNOTE_LINK_PLACEHOLDER>', 'g');

@@ -9,13 +9,15 @@ import { YarleOptions } from './YarleOptions';
 import { processNode } from './process-node';
 import { isWebClip } from './utils/note-utils';
 import { loggerInfo } from './utils/loggerInfo';
-import { hasAnyTagsInTemplate,
+import {
+  hasAnyTagsInTemplate,
   hasCreationTimeInTemplate,
   hasLinkToOriginalInTemplate,
   hasLocationInTemplate,
   hasNotebookInTemplate,
   hasSourceURLInTemplate,
-  hasUpdateTimeInTemplate } from './utils/templates/checker-functions';
+  hasUpdateTimeInTemplate
+} from './utils/templates/checker-functions';
 import { defaultTemplate } from './utils/templates/default-template';
 import { OutputFormat } from './output-format';
 import { clearLogFile } from './utils/clearLogFile';
@@ -69,7 +71,7 @@ export let yarleOptions: YarleOptions = { ...defaultYarleOptions };
 const setOptions = (options: YarleOptions): void => {
   yarleOptions = merge({}, defaultYarleOptions, options);
 
-  let template = (yarleOptions.templateFile)  ?  fs.readFileSync(yarleOptions.templateFile, 'utf-8') : defaultTemplate;
+  let template = (yarleOptions.templateFile) ? fs.readFileSync(yarleOptions.templateFile, 'utf-8') : defaultTemplate;
   template = yarleOptions.currentTemplate ? yarleOptions.currentTemplate : template;
 
   /*if (yarleOptions.templateFile) {*/
@@ -144,12 +146,12 @@ export const parseStream = async (options: YarleOptions, enexSource: string): Pr
         for (const task of Object.keys(tasks)) {
 
           const taskPlaceholder = `<YARLE-EN-V10-TASK>${task}</YARLE-EN-V10-TASK>`
-          const fileContent = fs.readFileSync(currentNotePath, 'UTF-8');
+          const fileContent = fs.readFileSync(currentNotePath, 'utf-8');
           const sortedTasks = new Map([...tasks[task]].sort());
 
           let updatedContent = fileContent.replace(taskPlaceholder, [...sortedTasks.values()].join('\n'));
 
-          const languageFactory  = new LanguageFactory();
+          const languageFactory = new LanguageFactory();
           const language = languageFactory.createLanguage(yarleOptions.outputFormat)
           updatedContent = language.tagProcess(fileContent, sortedTasks, taskPlaceholder, updatedContent)
 
@@ -159,7 +161,7 @@ export const parseStream = async (options: YarleOptions, enexSource: string): Pr
       }
     });
 
-    xml.on('tag:task', (pureTask: any) => {
+    xml.on('tag:task', (pureTask: any) => {
       const task = mapEvernoteTask(pureTask);
       if (!tasks[task.taskgroupnotelevelid]) {
         tasks[task.taskgroupnotelevelid] = new Map();

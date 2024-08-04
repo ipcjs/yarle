@@ -15,7 +15,7 @@ export const createTanaOutput = (options: YarleOptions, outputNotebookFolders: A
     for (const convertedFile of allconvertedFiles){
         // load and parse mergedTanaNotes, or create if
         const mergedNotes = getMergedTanaNotes(options)
-        const convertedTanaNote = JSON.parse(fs.readFileSync(convertedFile, 'UTF-8'))
+        const convertedTanaNote = JSON.parse(fs.readFileSync(convertedFile, 'utf-8'))
 
         updateMergedNotes(mergedNotes, convertedTanaNote)
         saveMergedTanaNotes(options, mergedNotes)
@@ -113,7 +113,7 @@ const getMergedTanaNotes = (options: YarleOptions): TanaIntermediateFile => {
 
     let mergedTanaNote
     try {
-        mergedTanaNote = JSON.parse(fs.readFileSync(`${options.outputDir}/${tanaNoteFileName}`, 'UTF-8'))
+        mergedTanaNote = JSON.parse(fs.readFileSync(`${options.outputDir}/${tanaNoteFileName}`, 'utf-8'))
     }catch(error){
         mergedTanaNote = createNewTanaFile()
     }

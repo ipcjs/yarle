@@ -13,7 +13,7 @@ export const writeFile = (absFilePath: string, noteContent: string, pureNoteData
       if (isLogseqJournal(yarleOptions) && fs.existsSync(absFilePath)){
         // put the title as a first line
         const compoundJournalNoteTitle = `# Journal Note for ${getCreationTime(pureNoteData)}`
-        const currentContent = fs.readFileSync(absFilePath, 'UTF-8')
+        const currentContent = fs.readFileSync(absFilePath, 'utf-8')
         if (!currentContent.startsWith(compoundJournalNoteTitle)){
           const updatedContent = `${compoundJournalNoteTitle}\n\n${currentContent}`
           fs.writeFileSync(absFilePath, updatedContent)
