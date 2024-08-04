@@ -11,6 +11,7 @@ import { filterByNodeName } from './filter-by-nodename';
 import { getAttributeProxy } from './get-attribute-proxy';
 import { isTOC } from './../../utils/is-toc';
 import { isHeptaOrObsidianOutput } from './../../utils/is-hepta-or-obsidian-output';
+import { getLanguageItems } from '../../outputLanguages/LanguageFactory';
 
 export const replaceBracketsForWikiLink = (str: string): string => {
     // Only a single bracket can exist in a wiki link.
@@ -54,7 +55,15 @@ const getEvernoteUniqueId = (value: string): string => {
 
 export const wikiStyleLinksRule = {
     filter: filterByNodeName('A'),
-    replacement: (content: any, node: HTMLElement) => {
+    replacement: function (content: string, node: HTMLAnchorElement) {
+        let styledContent = this.replacementImpl(content, node)
+        if (node.style.textDecoration === 'line-through') {
+            const languageItems = getLanguageItems(yarleOptions.outputFormat);
+            styledContent = `${languageItems.strikethrough}${styledContent}${languageItems.strikethrough}`;
+        }
+        return styledContent
+    },
+    replacementImpl: (content: string, node: HTMLAnchorElement) => {
         const nodeProxy = getAttributeProxy(node);
         let internalTurndownedContent = getTurndownService(yarleOptions).turndown(node.innerHTML);
         if (!nodeProxy.href) {

@@ -37,6 +37,7 @@
                 // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}vim查找替换及正则表达式的使用.enex",
                 // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_list.enex",
                 // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_list2.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_delete_line.enex",
             ],
             "preLaunchTask": "npm: build:watch",
         },
