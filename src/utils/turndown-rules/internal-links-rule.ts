@@ -12,6 +12,7 @@ import { getAttributeProxy } from './get-attribute-proxy';
 import { isTOC } from './../../utils/is-toc';
 import { isHeptaOrObsidianOutput } from './../../utils/is-hepta-or-obsidian-output';
 import { getLanguageItems } from '../../outputLanguages/LanguageFactory';
+import { hasLineThroughStyle } from './span-rule';
 
 export const replaceBracketsForWikiLink = (str: string): string => {
     // Only a single bracket can exist in a wiki link.
@@ -57,7 +58,7 @@ export const wikiStyleLinksRule = {
     filter: filterByNodeName('A'),
     replacement: function (content: string, node: HTMLAnchorElement) {
         let styledContent = this.replacementImpl(content, node)
-        if (node.style.textDecoration === 'line-through') {
+        if (hasLineThroughStyle(node)) {
             const languageItems = getLanguageItems(yarleOptions.outputFormat);
             styledContent = `${languageItems.strikethrough}${styledContent}${languageItems.strikethrough}`;
         }

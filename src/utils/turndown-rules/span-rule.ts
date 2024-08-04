@@ -11,6 +11,11 @@ const EVERNOTE_COLORHIGHLIGHT = '--en-highlight';
 const BOLD = 'bold';
 const ITALIC = 'italic';
 
+const LINE_THROUGH = 'line-through';
+export function hasLineThroughStyle(node: HTMLElement) {
+    return node.style.textDecoration?.includes(LINE_THROUGH) || node.style.textDecorationLine?.includes(LINE_THROUGH)
+}
+
 export const spanRule = {
     filter: filterByNodeName('SPAN'),
     replacement: (content: string, node: HTMLSpanElement) => {
@@ -25,7 +30,7 @@ export const spanRule = {
             if (content !== '<YARLE_NEWLINE_PLACEHOLDER>') {
                 const hasBold = nodeValue.includes(BOLD);
                 const hasItalic = nodeValue.includes(ITALIC);
-                const hasStrike = node.style.textDecoration === 'line-through'
+                const hasStrike = hasLineThroughStyle(node)
                 let styledContext = content
                 if (hasBold) {
                     styledContext = `${languageItems.bold}${styledContext}${languageItems.bold}`;

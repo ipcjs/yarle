@@ -21,7 +21,7 @@
                 // "--outputDir", "${env:DROPBOX}${/}Notes",
                 // "--outputDir", "${env:DROPBOX}${/}Notes", "--outputMarkdownDirName", "Evernote", "--enexSources", "K:\\Backup\\Evernote",
                 // "--outputDir", "${env:DROPBOX}${/}Notes", "--outputMarkdownDirName", "Evernote", "--enexSources", "/Volumes/Data/data/Evernote",
-                // "--outputMarkdownDirName", "Evernote-0724", "--enexSources", "K:\\Backup\\Evernote",
+                // "--outputMarkdownDirName", "Evernote-20240804", "--enexSources", "K:\\Backup\\Evernote",
                 // "--enexSources", "K:\\Backup\\Evernote\\Coding\\Coding@@@Dart.enex",
                 // "--enexSources", "K:\\Backup\\Evernote\\Coding\\Coding@@@JavaScript.enex",
                 // "--enexSources", "K:\\Backup\\Evernote\\ipcjs 的笔记本\\ipcjs 的笔记本@@@移动设备笔记.enex",
