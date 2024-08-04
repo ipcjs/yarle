@@ -15,11 +15,11 @@ export const logger = createLogger({
 });
 
 
-export async function profileFn<R>(block: () => Promise<R>, label?: string) {
-  console.profile(label)
+export async function profileFn<R>(block: () => Promise<R>) {
+  console.profile()
   return block()
     .then((r) => {
-      console.profileEnd(label)
+      console.profileEnd()
       return r
     })
 }

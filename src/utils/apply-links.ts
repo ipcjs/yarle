@@ -15,6 +15,7 @@ import { LanguageFactory } from './../outputLanguages/LanguageFactory';
 import { OutputFormat } from './../output-format';
 import { isTOC } from './is-toc';
 import { replaceBackSlashes, replaceBracketsForWikiLink } from './turndown-rules';
+import { fsc } from './cached-files';
 
 export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<string>): void => {
     const linkNameMap = RuntimePropertiesSingleton.getInstance();
@@ -60,7 +61,7 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
                 return path.extname(file).toLowerCase() === extension;
             });
             for (const targetFile of targetFiles) {
-                const fileContent = fs.readFileSync(`${notebookFolder}${path.sep}${targetFile}`, 'utf-8');
+                const fileContent = fsc.readFileSync(`${notebookFolder}${path.sep}${targetFile}`, 'utf-8');
                 let updatedContent = fileContent;
                 if (isTanaOutput()) {
                     const tanaNote = JSON.parse(updatedContent)
@@ -124,7 +125,7 @@ export const applyLinks = (options: YarleOptions, outputNotebookFolders: Array<s
     const unrecognizable = "Unrecognizable";
 
     for (const targetFile of allconvertedFiles) {
-        const fileContent = fs.readFileSync(targetFile, 'utf-8');
+        const fileContent = fsc.readFileSync(targetFile, 'utf-8');
 
         // TODO APPLY EVERNOTE LINK 
         const evernoteInternalLinkPlaceholderRegExp = new RegExp('<YARLE_EVERNOTE_LINK_PLACEHOLDER>', 'g');

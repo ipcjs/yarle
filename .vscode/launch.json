@@ -39,6 +39,9 @@
                 // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_list2.enex",
                 // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_delete_line.enex",
             ],
+            "env": {
+                "YARLE_TEXT_CACHE": "true"
+            },
             "preLaunchTask": "npm: build:watch",
         },
     ]

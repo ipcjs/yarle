@@ -5,5 +5,5 @@ import * as dropTheRopeRunner from './dropTheRopeRunner';
 import { profileFn, timeFn } from './utils/logger';
 
 // profileFn(() => dropTheRopeRunner.run({}))
-// timeFn(() => dropTheRopeRunner.run({}))
-dropTheRopeRunner.run({});
+timeFn(() => dropTheRopeRunner.run({}))
+// dropTheRopeRunner.run({});

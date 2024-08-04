@@ -28,6 +28,7 @@ import { TaskOutputFormat } from './task-output-format';
 import { isTanaOutput } from './utils/tana/is-tana-output';
 import { LanguageFactory } from './outputLanguages/LanguageFactory';
 import { EvernoteNoteData } from './models';
+import { fsc } from './utils/cached-files';
 
 export const defaultYarleOptions: YarleOptions = {
   enexSources: ['notebook.enex'],
@@ -146,7 +147,7 @@ export const parseStream = async (options: YarleOptions, enexSource: string): Pr
         for (const task of Object.keys(tasks)) {
 
           const taskPlaceholder = `<YARLE-EN-V10-TASK>${task}</YARLE-EN-V10-TASK>`
-          const fileContent = fs.readFileSync(currentNotePath, 'utf-8');
+          const fileContent = fsc.readFileSync(currentNotePath, 'utf-8');
           const sortedTasks = new Map([...tasks[task]].sort());
 
           let updatedContent = fileContent.replace(taskPlaceholder, [...sortedTasks.values()].join('\n'));
@@ -155,7 +156,7 @@ export const parseStream = async (options: YarleOptions, enexSource: string): Pr
           const language = languageFactory.createLanguage(yarleOptions.outputFormat)
           updatedContent = language.tagProcess(fileContent, sortedTasks, taskPlaceholder, updatedContent)
 
-          fs.writeFileSync(currentNotePath, updatedContent);
+          fsc.writeFileSync(currentNotePath, updatedContent);
 
         }
       }

@@ -5,6 +5,7 @@ import { getAllOutputFilesWithExtension } from "../get-all-output-files";
 import { NodeType, TanaIntermediateAttribute, TanaIntermediateFile, TanaIntermediateNode } from "./types";
 import { createNewTanaFile } from './create-new-tana-file';
 import { createTanaNode } from './create-tana-node';
+import { fsc } from '../cached-files';
 const tanaNoteFileName = 'notes-in-TIF.json';
 
 export const createTanaOutput = (options: YarleOptions, outputNotebookFolders: Array<string>): void => {
@@ -15,7 +16,7 @@ export const createTanaOutput = (options: YarleOptions, outputNotebookFolders: A
     for (const convertedFile of allconvertedFiles){
         // load and parse mergedTanaNotes, or create if
         const mergedNotes = getMergedTanaNotes(options)
-        const convertedTanaNote = JSON.parse(fs.readFileSync(convertedFile, 'utf-8'))
+        const convertedTanaNote = JSON.parse(fsc.readFileSync(convertedFile, 'utf-8'))
 
         updateMergedNotes(mergedNotes, convertedTanaNote)
         saveMergedTanaNotes(options, mergedNotes)
@@ -113,7 +114,7 @@ const getMergedTanaNotes = (options: YarleOptions): TanaIntermediateFile => {
 
     let mergedTanaNote
     try {
-        mergedTanaNote = JSON.parse(fs.readFileSync(`${options.outputDir}/${tanaNoteFileName}`, 'utf-8'))
+        mergedTanaNote = JSON.parse(fsc.readFileSync(`${options.outputDir}/${tanaNoteFileName}`, 'utf-8'))
     }catch(error){
         mergedTanaNote = createNewTanaFile()
     }
@@ -121,5 +122,5 @@ const getMergedTanaNotes = (options: YarleOptions): TanaIntermediateFile => {
 
 }
 const saveMergedTanaNotes  = (options: YarleOptions, mergedNotes: TanaIntermediateFile): void => {
-    fs.writeFileSync(`${options.outputDir}/${tanaNoteFileName}`, JSON.stringify(mergedNotes))
+    fsc.writeFileSync(`${options.outputDir}/${tanaNoteFileName}`, JSON.stringify(mergedNotes))
 }
