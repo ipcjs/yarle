@@ -39,9 +39,9 @@ export const getFileIndex = (dstPath: string, fileNamePrefix: string): number =>
       // drop the extension to compare with filename prefix
       const filePrefix = file.split('.').slice(0, -1).join('.');
       const escapedFilePrefix = escapeStringRegexp(fileNamePrefix);
-      const fileWithSameName = filePrefix.match(new RegExp(`${escapedFilePrefix}\\.\\d+`));
+      const fileWithSameName = filePrefix.match(new RegExp(`${escapedFilePrefix}\\.\\d+`, 'i'));
 
-      return filePrefix === fileNamePrefix || fileWithSameName;
+      return filePrefix.toLowerCase() === fileNamePrefix.toLowerCase() || fileWithSameName;
     })
     .length;
 

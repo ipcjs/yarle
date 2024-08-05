@@ -8,7 +8,7 @@ import * as utils from './utils';
 import { YarleOptions } from './YarleOptions';
 import { processNode } from './process-node';
 import { isWebClip } from './utils/note-utils';
-import { loggerInfo } from './utils/loggerInfo';
+import { loggerError, loggerInfo } from './utils/loggerInfo';
 import {
   hasAnyTagsInTemplate,
   hasCreationTimeInTemplate,
@@ -109,7 +109,7 @@ export const parseStream = async (options: YarleOptions, enexSource: string): Pr
   return new Promise((resolve, reject) => {
 
     const logAndReject = (error: Error) => {
-      loggerInfo(`Could not convert ${enexSource}:\n${error.message}`);
+      loggerError(`Could not convert ${enexSource}:\n${error.message}`, error);
       ++failed;
 
       return reject();
