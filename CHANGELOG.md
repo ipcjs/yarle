@@ -1,3 +1,10 @@
+# [6.16.0](https://github.com/akosbalasko/yarle/compare/v6.15.2...v6.16.0) (2025-01-13)
+
+
+### Features
+
+* trigger build ([#663](https://github.com/akosbalasko/yarle/issues/663)) ([588a2e0](https://github.com/akosbalasko/yarle/commit/588a2e0c250aceddfb541cb59fb202a09e9781d1))
+
 ## [6.15.2](https://github.com/akosbalasko/yarle/compare/v6.15.1...v6.15.2) (2024-11-15)
 
 
