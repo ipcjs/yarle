@@ -14,8 +14,16 @@ import {
   hasCreationTimeInTemplate,
   hasLinkToOriginalInTemplate,
   hasLocationInTemplate,
+  hasAltitudeInTemplate,
   hasNotebookInTemplate,
+  hasSubjectDateInTemplate,
+  hasAuthorInTemplate,
+  hasSourceInTemplate,
   hasSourceURLInTemplate,
+  hasSourceApplicationInTemplate,
+  hasPlaceNameInTemplate,
+  hasContentClassInTemplate,
+  hasApplicationDataInTemplate,
   hasUpdateTimeInTemplate
 } from './utils/templates/checker-functions';
 import { defaultTemplate } from './utils/templates/default-template';
@@ -43,6 +51,7 @@ export const defaultYarleOptions: YarleOptions = {
   plainTextNotesOnly: false,
   skipWebClips: true,
   useHashTags: true,
+  removeUnicodeCharsFromTags: false,
   trimStartingTabs: false,
   convertPlainHtmlNewlines: false,
   encryptionPasswords: [],
@@ -78,8 +87,17 @@ const setOptions = (options: YarleOptions): void => {
   /*if (yarleOptions.templateFile) {*/
   // todo: handle file not exists error
   yarleOptions.skipCreationTime = !hasCreationTimeInTemplate(template);
+  yarleOptions.skipSubjectDate = !hasSubjectDateInTemplate(template);
   yarleOptions.skipLocation = !hasLocationInTemplate(template);
+  yarleOptions.skipAltitude = !hasAltitudeInTemplate(template);
+  yarleOptions.skipAuthor = !hasAuthorInTemplate(template);
+  yarleOptions.skipSource = !hasSourceInTemplate(template);
   yarleOptions.skipSourceUrl = !hasSourceURLInTemplate(template);
+  yarleOptions.skipSourceApplication = !hasSourceApplicationInTemplate(template);
+  yarleOptions.skipPlaceName = !hasPlaceNameInTemplate(template);
+  yarleOptions.skipContentClass = !hasContentClassInTemplate(template);
+  yarleOptions.skipApplicationData = !hasApplicationDataInTemplate(template);
+  yarleOptions.skipAuthor = !hasAuthorInTemplate(template);
   yarleOptions.skipTags = !hasAnyTagsInTemplate(template) && !isTanaOutput();
   yarleOptions.skipUpdateTime = !hasUpdateTimeInTemplate(template);
   yarleOptions.isNotebookNameNeeded = hasNotebookInTemplate(template);

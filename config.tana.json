@@ -35,6 +35,7 @@
     "useLevenshteinForLinks": false,
     "keepEvernoteLinkIfNoNoteFound": false,
     "convertColorsToMDHighlight": false,
+    "removeUnicodeCharsFromTags": false,
     "replacementChar": "_",
     "replacementCharacterMap": {
         "<": "_",
@@ -55,6 +56,11 @@
         },
         {
         "type": "content",
+        "regex": "",
+        "replace": ""
+        },
+        {
+        "type": "tag",
         "regex": "",
         "replace": ""
         }

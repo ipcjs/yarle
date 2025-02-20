@@ -20,6 +20,7 @@
     "skipWebClips": true,
     "skipTags": false,
     "useHashTags": true,
+    "removeUnicodeCharsFromTags": false,
     "outputFormat": "ObsidianMD",
     "taskOutputFormat": "ObsidianMD",
     "imageSizeFormat": "ObsidianMD",
@@ -56,6 +57,11 @@
         },
         {
         "type": "content",
+        "regex": "",
+        "replace": ""
+        },
+        {
+        "type": "tag",
         "regex": "",
         "replace": ""
         }

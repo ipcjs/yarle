@@ -209,7 +209,7 @@
 															<label for="keepOriginalHtml" class="pure-checkbox">
 															Keep the original Html
 															<br><div style='font-size: 12px;'><i>(
-															Converts the notes to HTML format also.)</i></div>
+															Converts the notes to HTML format also. To enable it you must place the following metadata link into the template too {link-to-original-block}{link-to-original}{end-link-to-original-block})</i></div>
 															</label>
 															<!--<input type="checkbox" id='keepOriginalHtml' value="false">-->
 															<select class="form-control configurationItem" name="keepOriginalHtml" id="keepOriginalHtml">
@@ -536,9 +536,9 @@
 											</div>
 											<div class="form-group">
 												<label for="globalReplacementSettings">
-													Global search and replace (regexp) in note title and content
+													Global search and replace (regexp) in note title, content and tags
 													<br><div style='font-size: 12px;'><i>(
-													Please provide settings in valid JSON Array format, each item has to have <b>type</b> ('title' or 'content'), <b>regex</b> (what you want to replace as a valid regular expression) and <b>replace</b> (what you want to push instead of the matched text) properties)</i></div> 
+													Please provide settings in valid JSON Array format, each item has to have <b>type</b> ('title', 'content' or 'tag'), <b>regex</b> (what you want to replace as a valid regular expression) and <b>replace</b> (what you want to push instead of the matched text) properties)</i></div> 
 												</label>
 												<textarea class="form-control configurationItem" name="globalReplacementSettings" id="globalReplacementSettings" rows="15"></textarea>
 														
@@ -586,6 +586,19 @@
 														<option value="false" selected>No</option>
 													  </select>
 												</div>
+												<div class="form-group">
+													  <label for="useHashTags" class="pure-checkbox">
+														Remove special Unicode characters from tags
+														
+													  </label>
+
+
+													<select class="form-control configurationItem" name="removeUnicodeCharsFromTags" id="removeUnicodeCharsFromTags">
+														<option value="true">Yes</option>
+														<option value="false" selected>No</option>
+													  </select>
+												</div>
+												
 												<div class="form-group">
 													<!--<input type="checkbox" value="false" id='nestedTags'> -->
 													  <label for="nestedTags" class="pure-checkbox">
