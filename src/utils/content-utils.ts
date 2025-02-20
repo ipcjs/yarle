@@ -174,6 +174,7 @@ export const logTags = (note: EvernoteNoteData): string => {
     const tags = tagArray.map((tag: any) => {
       let cleanTag: string
       if (tagOptions?.characterMap) {
+        cleanTag = performRegexpOnTag(yarleOptions, cleanTag)
         cleanTag = CharacterMap.apply(tagOptions.characterMap, tag.toString())
       } else {
         cleanTag = tag
