@@ -109,7 +109,7 @@ export const logTags = (note: EvernoteNoteData): string => {
         const replaceSpaceWith = (tagOptions && tagOptions.replaceSpaceWith) || '-';
 
         cleanTag = cleanTag.replace(/ /g, replaceSpaceWith);
-        if (yarleOptions.outputFormat === OutputFormat.ObsidianMD) {
+        if (yarleOptions.removeUnicodeCharsFromTags) {
           cleanTag = cleanTag.replace(/[^\w/\\-]/gu, '')
         }
       }

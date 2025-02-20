@@ -43,6 +43,7 @@ export const defaultYarleOptions: YarleOptions = {
   plainTextNotesOnly: false,
   skipWebClips: true,
   useHashTags: true,
+  removeUnicodeCharsFromTags: false,
   trimStartingTabs: false,
   convertPlainHtmlNewlines: false,
   encryptionPasswords: [],
