@@ -7,6 +7,7 @@ import { EvernoteNoteData, NoteData } from './../models';
 import { getHtmlFileLink } from './folder-utils';
 import { escapeStringRegexp } from './escape-string-regexp';
 import { OutputFormat } from './../output-format';
+import { performRegexpOnTag } from './get-title';
 import { CharacterMap } from '../CharacterMap';
 
 export const getMetadata = (note: EvernoteNoteData, notebookName: string): MetaData => {
@@ -102,6 +103,8 @@ export const logTags = (note: EvernoteNoteData): string => {
         cleanTag = tag
           .toString()
           .replace(/^#/, '');
+
+        cleanTag = performRegexpOnTag(yarleOptions, cleanTag)
         if (tagOptions) {
           cleanTag = cleanTag.replace(new RegExp(escapeStringRegexp(tagOptions.separatorInEN), 'g'), tagOptions.replaceSeparatorWith);
         }
