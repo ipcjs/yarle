@@ -1,3 +1,31 @@
+# [6.16.0](https://github.com/akosbalasko/yarle/compare/v6.15.2...v6.16.0) (2025-01-13)
+
+
+### Features
+
+* trigger build ([#663](https://github.com/akosbalasko/yarle/issues/663)) ([588a2e0](https://github.com/akosbalasko/yarle/commit/588a2e0c250aceddfb541cb59fb202a09e9781d1))
+
+## [6.15.2](https://github.com/akosbalasko/yarle/compare/v6.15.1...v6.15.2) (2024-11-15)
+
+
+### Bug Fixes
+
+* keep html ([#654](https://github.com/akosbalasko/yarle/issues/654)) ([71568bd](https://github.com/akosbalasko/yarle/commit/71568bd03887a65ee30dd901c4bf067b93dcfa09))
+
+## [6.15.1](https://github.com/akosbalasko/yarle/compare/v6.15.0...v6.15.1) (2024-09-10)
+
+
+### Bug Fixes
+
+* hidden files after sanitizing ([#650](https://github.com/akosbalasko/yarle/issues/650)) ([ea4bfb2](https://github.com/akosbalasko/yarle/commit/ea4bfb251631f505355d3d34eedd048c0b6beac3))
+
+# [6.15.0](https://github.com/akosbalasko/yarle/compare/v6.14.8...v6.15.0) (2024-09-09)
+
+
+### Features
+
+* adding tags to global regexp ([#649](https://github.com/akosbalasko/yarle/issues/649)) ([c8d63f5](https://github.com/akosbalasko/yarle/commit/c8d63f52e9e4147e9ead09da3c83c5e1dd25700e))
+
 ## [6.14.8](https://github.com/akosbalasko/yarle/compare/v6.14.7...v6.14.8) (2024-08-20)
 
 
