@@ -11,12 +11,14 @@ export interface YarleOptions {
     outputDir?: string;
     outputMarkdownDirName?: string;
     keepOriginalHtml?: boolean;
+    keepOriginalHtmlForWebClips?: boolean;
     posixHtmlPath?: boolean;
     isMetadataNeeded?: boolean;
     isNotebookNameNeeded?: boolean;
     isZettelkastenNeeded?: boolean;
     useZettelIdAsFilename?: boolean;
     plainTextNotesOnly?: boolean;
+    skipLinkToOriginal?: boolean;
     skipLocation?: boolean;
     skipAltitude?: boolean;
     skipCreationTime?: boolean;

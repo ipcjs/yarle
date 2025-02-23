@@ -63,7 +63,9 @@ export const getHtmlFilePath = (note: EvernoteNoteData): string => {
 
 export const getHtmlFileLink = (note: EvernoteNoteData): string => {
   const filePath = getHtmlFilePath(note);
-  const relativePath = `.${filePath.slice(paths.resourcePath.lastIndexOf(path.sep))}`;
+  const relativePath = `.${filePath.slice(paths.resourcePath.lastIndexOf(path.sep))}`
+    // spaces in link is unsupported in markdown...
+    .replace(/ /g, '%20');
   if (yarleOptions.posixHtmlPath && path.sep !== path.posix.sep) {
     return relativePath.split(path.sep).join(path.posix.sep);
   }

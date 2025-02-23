@@ -73,7 +73,7 @@ export const applyTemplate = (noteData: NoteData, yarleOptions: YarleOptions) =>
 
   result = applyContentTemplate(noteData, result, () => noteData.markdownContent);
 
-  result = (yarleOptions.keepOriginalHtml && noteData.linkToOriginal)
+  result = (!yarleOptions.skipLinkToOriginal && noteData.linkToOriginal)
       ? applyLinkToOriginalTemplate(noteData, result)
       : removeLinkToOriginalTemplate(result);
 

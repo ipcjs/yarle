@@ -1,6 +1,7 @@
 import { InternalLink } from './InternalLink';
+import { MetaData } from './MetaData';
 
-export interface NoteData {
+export interface NoteData extends MetaData {
     title?: string;
     created?:string;
     noteName?: string;
@@ -10,24 +11,7 @@ export interface NoteData {
     htmlContent?: string;
     markdownContent?: string;
     appliedMarkdownContent?: string;
-    createdAt?: string;
-    updatedAt?: string;
-    subjectDate?: string;
-    author?: string;
-    source?: string;
-    sourceUrl?: string;
-    sourceApplication?: string;
-    placeName?: string;
-    contentClass?: string;
-    applicationData?: string;
-    location?: string;
-    altitude?: string;
-    linkToOriginal?: string;
-    notebookName?: string;
     internalLinks?: Array<InternalLink>;
-    reminderTime?: string;
-    reminderDoneTime?: string;
-    reminderOrder?: string;
   }
 
 export interface EvernoteNoteData {

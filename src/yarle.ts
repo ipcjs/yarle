@@ -43,6 +43,7 @@ export const defaultYarleOptions: YarleOptions = {
   outputDir: './mdNotes',
   outputMarkdownDirName: 'notes',
   keepOriginalHtml: false,
+  keepOriginalHtmlForWebClips: false,
   posixHtmlPath: false,
   isMetadataNeeded: false,
   isNotebookNameNeeded: false,
@@ -101,7 +102,7 @@ const setOptions = (options: YarleOptions): void => {
   yarleOptions.skipTags = !hasAnyTagsInTemplate(template) && !isTanaOutput();
   yarleOptions.skipUpdateTime = !hasUpdateTimeInTemplate(template);
   yarleOptions.isNotebookNameNeeded = hasNotebookInTemplate(template);
-  yarleOptions.keepOriginalHtml = hasLinkToOriginalInTemplate(template);
+  yarleOptions.skipLinkToOriginal = !hasLinkToOriginalInTemplate(template);
 
   yarleOptions.currentTemplate = template;
 

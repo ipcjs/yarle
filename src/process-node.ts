@@ -58,7 +58,7 @@ export const processNode = (pureNote: EvernoteNoteData, notebookName: string): v
 
     targetLanguage.noteProcess(yarleOptions, noteData, pureNote)
 
-    if (yarleOptions.keepOriginalHtml) {
+    if (yarleOptions.keepOriginalHtml || (yarleOptions.keepOriginalHtmlForWebClips && noteData.isWebClip)) {
       noteData.htmlContent = htmlContent;
       convert2Html(noteData);
       saveHtmlFile(noteData, pureNote);
