@@ -130,9 +130,7 @@ export const clearMdNotesDistDir = (): void => {
 
 export const setPaths = (enexSource: string): void => {
   // loggerInfo('setting paths');
-  const enexFolder = enexSource.split(path.sep);
-  // loggerInfo(`enex folder split: ${JSON.stringify(enexFolder)}`);
-  let enexFile = (enexFolder.length >= 1 ?  enexFolder[enexFolder.length - 1] : enexFolder[0]).split(/.enex$/)[0];
+  let enexFile = path.basename(enexSource, '.enex')
   enexFile = normalizeFilenameString(enexFile);
   if (yarleOptions.nestedNotebookSeparator) {
     enexFile = enexFile.replace(yarleOptions.nestedNotebookSeparator, path.sep)
