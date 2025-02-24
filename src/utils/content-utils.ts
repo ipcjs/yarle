@@ -9,6 +9,7 @@ import { escapeStringRegexp } from './escape-string-regexp';
 import { OutputFormat } from './../output-format';
 import { performRegexpOnTag } from './get-title';
 import { CharacterMap } from '../CharacterMap';
+import { isWebClip } from './note-utils';
 
 export const getMetadata = (note: EvernoteNoteData, notebookName: string): MetaData => {
 
@@ -20,6 +21,7 @@ export const getMetadata = (note: EvernoteNoteData, notebookName: string): MetaD
         source: getSource(note),
         sourceUrl: getSourceUrl(note),
         sourceApplication: getSourceApplication(note),
+        isWebClip: isWebClip(note),
         location: getLatLong(note),
         altitude: getAltitude(note),
         placeName: getPlaceName(note),
@@ -131,7 +133,7 @@ export const getApplicationData = (note: EvernoteNoteData): string => {
 };
 
 export const getLinkToOriginal = (note: EvernoteNoteData): string => {
-  return yarleOptions.keepOriginalHtml ?
+  return (yarleOptions.keepOriginalHtml || (yarleOptions.keepOriginalHtmlForWebClips && isWebClip(note))) ?
     getHtmlFileLink(note) : undefined;
 };
 

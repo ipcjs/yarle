@@ -5,6 +5,8 @@
     "templateFile": "./sampleTemplate_obsidian.tmpl",
     "outputDir": "out",
     "keepOriginalHtml": false,
+    "keepOriginalHtmlForWebClips": true,
+    "posixHtmlPath": true,
     "isMetadataNeeded": false,
     "isNotebookNameNeeded": false,
     "isZettelkastenNeeded": false,
