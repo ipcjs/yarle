@@ -11,8 +11,8 @@ export const defaultHtmlTemplate = `
         background-color: #f8f8f8;
         }
         body, td, th {
-        font-family: __fontFamily__;
-        font-size: __fontSize__;
+        font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+        font-size: 12pt;
         }
         table.meta {
         margin-bottom: 3em;

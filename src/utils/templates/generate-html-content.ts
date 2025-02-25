@@ -3,8 +3,6 @@ import { yarleOptions } from "../../yarle";
 export function generateHtmlContent(options: {
     title?: string;
     content?: string;
-    fontFamily: string;
-    fontSize: string;
     metaTable: string;
 }): string
 export function generateHtmlContent(options: Record<string, any>) {
