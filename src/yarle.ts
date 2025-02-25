@@ -37,6 +37,7 @@ import { isTanaOutput } from './utils/tana/is-tana-output';
 import { LanguageFactory } from './outputLanguages/LanguageFactory';
 import { EvernoteNoteData } from './models';
 import { fsc } from './utils/cached-files';
+import { defaultHtmlTemplate } from './utils/templates/default-html-template';
 
 export const defaultYarleOptions: YarleOptions = {
   enexSources: ['notebook.enex'],
@@ -84,6 +85,7 @@ const setOptions = (options: YarleOptions): void => {
 
   let template = (yarleOptions.templateFile) ? fs.readFileSync(yarleOptions.templateFile, 'utf-8') : defaultTemplate;
   template = yarleOptions.currentTemplate ? yarleOptions.currentTemplate : template;
+  const htmlTemplate = yarleOptions.htmlTemplateFile ? fs.readFileSync(yarleOptions.htmlTemplateFile, 'utf-8') : defaultHtmlTemplate;
 
   /*if (yarleOptions.templateFile) {*/
   // todo: handle file not exists error
@@ -105,6 +107,7 @@ const setOptions = (options: YarleOptions): void => {
   yarleOptions.skipLinkToOriginal = !hasLinkToOriginalInTemplate(template);
 
   yarleOptions.currentTemplate = template;
+  yarleOptions.currentHtmlTemplate = htmlTemplate;
 
   loggerInfo(`Current config is: ${JSON.stringify(yarleOptions, null, 4)}`);
   loggerInfo(`Path separator:${path.sep}`);

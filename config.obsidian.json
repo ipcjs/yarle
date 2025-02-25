@@ -3,6 +3,7 @@
         "./test-template.enex"
     ],
     "templateFile": "./sampleTemplate_obsidian.tmpl",
+    "htmlTemplateFile": "./sampleHtmlTemplate_obsidian.html",
     "outputDir": "out",
     "keepOriginalHtml": false,
     "keepOriginalHtmlForWebClips": true,

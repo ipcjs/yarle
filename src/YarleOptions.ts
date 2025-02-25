@@ -13,6 +13,8 @@ export interface YarleOptions {
     keepOriginalHtml?: boolean;
     keepOriginalHtmlForWebClips?: boolean;
     posixHtmlPath?: boolean;
+    htmlTemplateFile?: string;
+    currentHtmlTemplate?: string;
     isMetadataNeeded?: boolean;
     isNotebookNameNeeded?: boolean;
     isZettelkastenNeeded?: boolean;
