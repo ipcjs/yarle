@@ -63,7 +63,9 @@ export const getHtmlFilePath = (note: EvernoteNoteData): string => {
 
 export const getHtmlFileLink = (note: EvernoteNoteData): string => {
   const filePath = getHtmlFilePath(note);
-  const relativePath = `.${filePath.slice(paths.resourcePath.lastIndexOf(path.sep))}`;
+  const relativePath = `.${filePath.slice(paths.resourcePath.lastIndexOf(path.sep))}`
+    // spaces in link is unsupported in markdown...
+    .replace(/ /g, '%20');
   if (yarleOptions.posixHtmlPath && path.sep !== path.posix.sep) {
     return relativePath.split(path.sep).join(path.posix.sep);
   }
@@ -130,24 +132,26 @@ export const clearMdNotesDistDir = (): void => {
 
 export const setPaths = (enexSource: string): void => {
   // loggerInfo('setting paths');
-  const enexFolder = enexSource.split(path.sep);
-  // loggerInfo(`enex folder split: ${JSON.stringify(enexFolder)}`);
-  let enexFile = (enexFolder.length >= 1 ?  enexFolder[enexFolder.length - 1] : enexFolder[0]).split(/.enex$/)[0];
+  let enexFile = path.basename(enexSource, '.enex')
   enexFile = normalizeFilenameString(enexFile);
+  if (yarleOptions.nestedNotebookSeparator) {
+    enexFile = enexFile.replace(yarleOptions.nestedNotebookSeparator, path.sep)
+  }
   // loggerInfo(`enex file: ${enexFile}`);
 
   const outputDir = path.isAbsolute(yarleOptions.outputDir)
     ? yarleOptions.outputDir
     : `${process.cwd()}${path.sep}${yarleOptions.outputDir}`;
+  const mdDirName = yarleOptions.outputMarkdownDirName;
 
-  paths.mdPath = `${outputDir}${path.sep}notes${path.sep}`;
-  paths.resourcePath = `${outputDir}${path.sep}notes${path.sep}${yarleOptions.resourcesDir}`;
+  paths.mdPath = `${outputDir}${path.sep}${mdDirName}${path.sep}`;
+  paths.resourcePath = `${outputDir}${path.sep}${mdDirName}${path.sep}${yarleOptions.resourcesDir}`;
 
   // loggerInfo(`Skip enex filename from output? ${yarleOptions.skipEnexFileNameFromOutputPath}`);
   if (!yarleOptions.skipEnexFileNameFromOutputPath) {
     paths.mdPath = `${paths.mdPath}${enexFile}`;
     // loggerInfo(`mdPath: ${paths.mdPath}`);
-    paths.resourcePath = `${outputDir}${path.sep}notes${path.sep}${enexFile}${path.sep}${yarleOptions.resourcesDir}`;
+    paths.resourcePath = `${outputDir}${path.sep}${mdDirName}${path.sep}${enexFile}${path.sep}${yarleOptions.resourcesDir}`;
   }
 
   if (yarleOptions.outputFormat === OutputFormat.LogSeqMD) {

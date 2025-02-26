@@ -1,0 +1,51 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "cmd",
+            "program": "${workspaceFolder}/dist/dropTheRope.js",
+            "preLaunchTask": "npm: build:watch",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "cmd:obsidian",
+            "program": "${workspaceFolder}/dist/dropTheRope.js",
+            "args": [
+                "--configFile", "./config.obsidian.json",
+                // "--outputDir", "${env:DROPBOX}${/}Notes",
+                // "--outputDir", "${env:DROPBOX}${/}Notes", "--outputMarkdownDirName", "Evernote", "--enexSources", "K:\\Backup\\Evernote",
+                // "--outputDir", "${env:DROPBOX}${/}Notes", "--outputMarkdownDirName", "Evernote", "--enexSources", "/Volumes/Data/data/Evernote",
+                // "--outputMarkdownDirName", "Evernote-202502270147", "--enexSources", "K:\\Backup\\Evernote",
+                // "--enexSources", "K:\\Backup\\Evernote\\Coding\\Coding@@@Java.enex",
+                // "--enexSources", "K:\\Backup\\Evernote\\Coding\\Coding@@@Dart.enex",
+                // "--enexSources", "K:\\Backup\\Evernote\\Coding\\Coding@@@JavaScript.enex",
+                // "--enexSources", "K:\\Backup\\Evernote\\ipcjs 的笔记本\\ipcjs 的笔记本@@@移动设备笔记.enex",
+                // "--enexSources", "K:\\Backup\\Evernote\\ipcjs 的笔记本\\ipcjs 的笔记本@@@影视.enex",
+                "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}测试链接和转义.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}测试转义.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}测试下划线.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}测试带链接的图片.enex",
+                // "--enexSources", "/Volumes/Data/data/Evernote/Coding/Coding@@@Dart.enex"
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}测试缩进代码块.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test escape.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_table.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}vim查找替换及正则表达式的使用.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_list.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_list2.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_delete_line.enex",
+                // "--enexSources", "${env:DROPBOX}${/}Notes${/}yarle-test${/}test_node_duplicated_name.enex",
+            ],
+            "env": {
+                "YARLE_TEXT_CACHE": "true"
+            },
+            "preLaunchTask": "npm: build:watch",
+        },
+    ]
+}

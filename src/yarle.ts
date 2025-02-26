@@ -8,8 +8,9 @@ import * as utils from './utils';
 import { YarleOptions } from './YarleOptions';
 import { processNode } from './process-node';
 import { isWebClip } from './utils/note-utils';
-import { loggerInfo } from './utils/loggerInfo';
-import { hasAnyTagsInTemplate,
+import { loggerError, loggerInfo } from './utils/loggerInfo';
+import {
+  hasAnyTagsInTemplate,
   hasCreationTimeInTemplate,
   hasLinkToOriginalInTemplate,
   hasLocationInTemplate,
@@ -23,7 +24,8 @@ import { hasAnyTagsInTemplate,
   hasPlaceNameInTemplate,
   hasContentClassInTemplate,
   hasApplicationDataInTemplate,
-  hasUpdateTimeInTemplate } from './utils/templates/checker-functions';
+  hasUpdateTimeInTemplate
+} from './utils/templates/checker-functions';
 import { defaultTemplate } from './utils/templates/default-template';
 import { OutputFormat } from './output-format';
 import { clearLogFile } from './utils/clearLogFile';
@@ -34,11 +36,16 @@ import { TaskOutputFormat } from './task-output-format';
 import { isTanaOutput } from './utils/tana/is-tana-output';
 import { LanguageFactory } from './outputLanguages/LanguageFactory';
 import { EvernoteNoteData } from './models';
+import { fsc } from './utils/cached-files';
+import { defaultHtmlTemplate } from './utils/templates/default-html-template';
 
 export const defaultYarleOptions: YarleOptions = {
   enexSources: ['notebook.enex'],
   outputDir: './mdNotes',
+  outputMarkdownDirName: 'notes',
   keepOriginalHtml: false,
+  keepOriginalHtmlForWebClips: false,
+  embedHtmlForWebClips: false,
   posixHtmlPath: false,
   isMetadataNeeded: false,
   isNotebookNameNeeded: false,
@@ -69,6 +76,7 @@ export const defaultYarleOptions: YarleOptions = {
   turndownOptions: {
     headingStyle: 'atx',
   },
+  indentCharacter: '	',
 };
 
 export let yarleOptions: YarleOptions = { ...defaultYarleOptions };
@@ -76,8 +84,9 @@ export let yarleOptions: YarleOptions = { ...defaultYarleOptions };
 const setOptions = (options: YarleOptions): void => {
   yarleOptions = merge({}, defaultYarleOptions, options);
 
-  let template = (yarleOptions.templateFile)  ?  fs.readFileSync(yarleOptions.templateFile, 'utf-8') : defaultTemplate;
+  let template = (yarleOptions.templateFile) ? fs.readFileSync(yarleOptions.templateFile, 'utf-8') : defaultTemplate;
   template = yarleOptions.currentTemplate ? yarleOptions.currentTemplate : template;
+  const htmlTemplate = yarleOptions.htmlTemplateFile ? fs.readFileSync(yarleOptions.htmlTemplateFile, 'utf-8') : defaultHtmlTemplate;
 
   /*if (yarleOptions.templateFile) {*/
   // todo: handle file not exists error
@@ -96,9 +105,10 @@ const setOptions = (options: YarleOptions): void => {
   yarleOptions.skipTags = !hasAnyTagsInTemplate(template) && !isTanaOutput();
   yarleOptions.skipUpdateTime = !hasUpdateTimeInTemplate(template);
   yarleOptions.isNotebookNameNeeded = hasNotebookInTemplate(template);
-  yarleOptions.keepOriginalHtml = hasLinkToOriginalInTemplate(template);
+  yarleOptions.skipLinkToOriginal = !hasLinkToOriginalInTemplate(template);
 
   yarleOptions.currentTemplate = template;
+  yarleOptions.currentHtmlTemplate = htmlTemplate;
 
   loggerInfo(`Current config is: ${JSON.stringify(yarleOptions, null, 4)}`);
   loggerInfo(`Path separator:${path.sep}`);
@@ -122,7 +132,7 @@ export const parseStream = async (options: YarleOptions, enexSource: string): Pr
   return new Promise((resolve, reject) => {
 
     const logAndReject = (error: Error) => {
-      loggerInfo(`Could not convert ${enexSource}:\n${error.message}`);
+      loggerError(`Could not convert ${enexSource}:\n${error.message}`, error);
       ++failed;
 
       return reject();
@@ -160,22 +170,22 @@ export const parseStream = async (options: YarleOptions, enexSource: string): Pr
         for (const task of Object.keys(tasks)) {
 
           const taskPlaceholder = `<YARLE-EN-V10-TASK>${task}</YARLE-EN-V10-TASK>`
-          const fileContent = fs.readFileSync(currentNotePath, 'UTF-8');
+          const fileContent = fsc.readFileSync(currentNotePath, 'utf-8');
           const sortedTasks = new Map([...tasks[task]].sort());
 
           let updatedContent = fileContent.replace(taskPlaceholder, [...sortedTasks.values()].join('\n'));
 
-          const languageFactory  = new LanguageFactory();
+          const languageFactory = new LanguageFactory();
           const language = languageFactory.createLanguage(yarleOptions.outputFormat)
           updatedContent = language.tagProcess(fileContent, sortedTasks, taskPlaceholder, updatedContent)
 
-          fs.writeFileSync(currentNotePath, updatedContent);
+          fsc.writeFileSync(currentNotePath, updatedContent);
 
         }
       }
     });
 
-    xml.on('tag:task', (pureTask: any) => {
+    xml.on('tag:task', (pureTask: any) => {
       const task = mapEvernoteTask(pureTask);
       if (!tasks[task.taskgroupnotelevelid]) {
         tasks[task.taskgroupnotelevelid] = new Map();

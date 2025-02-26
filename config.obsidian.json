@@ -1,0 +1,117 @@
+{
+    "enexSources": [
+        "./test-template.enex"
+    ],
+    "templateFile": "./sampleTemplate_obsidian.tmpl",
+    "htmlTemplateFile": "./sampleHtmlTemplate_obsidian.html",
+    "outputDir": "out",
+    "keepOriginalHtml": false,
+    "keepOriginalHtmlForWebClips": false,
+    "embedHtmlForWebClips": true,
+    "posixHtmlPath": true,
+    "isMetadataNeeded": false,
+    "isNotebookNameNeeded": false,
+    "isZettelkastenNeeded": false,
+    "useZettelIdAsFilename": false,
+    "plainTextNotesOnly": false,
+    "skipLocation": false,
+    "skipCreationTime": false,
+    "trimStartingTabs": false,
+    "convertPlainHtmlNewlines": false,
+    "encryptionPasswords": [],
+    "skipUpdateTime": false,
+    "skipSourceUrl": false,
+    "skipWebClips": false,
+    "skipTags": false,
+    "useHashTags": false,
+    "removeUnicodeCharsFromTags": true,
+    "outputFormat": "ObsidianMD",
+    "taskOutputFormat": "ObsidianMD",
+    "imageSizeFormat": "ObsidianMD",
+    "keepImageSize": true,
+    "skipEnexFileNameFromOutputPath": false,
+    "keepOriginalAmountOfNewlines": false,
+    "urlEncodeFileNamesAndLinks": false,
+    "pathSeparator": "/",
+    "sanitizeResourceNameSpaces": false,
+    "haveEnexLevelResources": false,
+    "haveGlobalResources": false,
+    "useUniqueUnknownFileNames": false,
+    "useLevenshteinForLinks": false,
+    "keepEvernoteLinkIfNoNoteFound": false,
+    "convertColorsToMDHighlight": false,
+    "replacementChar": "_",
+    "replacementCharacterMap": {
+        " <": "＜",
+        "<": "＜",
+        "> ": "＞",
+        ">": "＞",
+        ": ": "：",
+        ":": "：",
+        "\"": "＂",
+        " / ": "／",
+        "/": "／",
+        " \\ ": "＼", 
+        "\\": "＼", 
+        " | ": "｜",
+        "|": "｜",
+        "?": "？",
+        "*": "＊"
+    },
+    "globalReplacementSettings": [
+        {
+        "type": "title" ,
+        "regex": "",
+        "replace": ""
+        },
+        {
+        "type": "content",
+        "regex": "",
+        "replace": ""
+        },
+        {
+        "type": "tag",
+        "regex": "",
+        "replace": ""
+        }
+    ],
+    "logseqSettings": {
+        "journalNotes": false
+    },
+    "obsidianSettings": {
+        "omitLinkDisplayName": false
+    },
+    "nestedTags": {
+        "separatorInEN": "/",
+        "replaceSeparatorWith": "／",
+        "replaceSpaceWith": "_",
+        "characterMap": {
+            " <": "＜",
+            "<": "＜",
+            "> ": "＞",
+            ">": "＞",
+            ": ": "：",
+            ":": "：",
+            "\"": "＂",
+            " / ": "／",
+            "/": "／",
+            " \\ ": "＼", 
+            "\\": "＼", 
+            " | ": "｜",
+            "|": "｜",
+            "?": "？",
+            "*": "＊",
+            " (": "（",
+            "(": "（",
+            ") ": "）",
+            ")": "）",
+            " ": "_"
+        }
+    },
+    "nestedNotebookSeparator": "@@@",
+    "resourcesDir": "resources",
+    "keepMDCharactersOfENNotes": false,
+    "keepEvernoteExternalLinks": true,
+    "monospaceIsCodeBlock": false,
+    "dateFormat": "YYYY-MM-DDTHH:mm:ss"
+}

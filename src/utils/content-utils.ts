@@ -8,6 +8,8 @@ import { getHtmlFileLink } from './folder-utils';
 import { escapeStringRegexp } from './escape-string-regexp';
 import { OutputFormat } from './../output-format';
 import { performRegexpOnTag } from './get-title';
+import { CharacterMap } from '../CharacterMap';
+import { isWebClip } from './note-utils';
 
 export const getMetadata = (note: EvernoteNoteData, notebookName: string): MetaData => {
 
@@ -19,6 +21,7 @@ export const getMetadata = (note: EvernoteNoteData, notebookName: string): MetaD
         source: getSource(note),
         sourceUrl: getSourceUrl(note),
         sourceApplication: getSourceApplication(note),
+        isWebClip: isWebClip(note),
         location: getLatLong(note),
         altitude: getAltitude(note),
         placeName: getPlaceName(note),
@@ -130,7 +133,7 @@ export const getApplicationData = (note: EvernoteNoteData): string => {
 };
 
 export const getLinkToOriginal = (note: EvernoteNoteData): string => {
-  return yarleOptions.keepOriginalHtml ?
+  return (yarleOptions.keepOriginalHtml || (yarleOptions.keepOriginalHtmlForWebClips && isWebClip(note))) ?
     getHtmlFileLink(note) : undefined;
 };
 
@@ -171,21 +174,27 @@ export const logTags = (note: EvernoteNoteData): string => {
     const tagOptions = yarleOptions.nestedTags;
 
     const tags = tagArray.map((tag: any) => {
-      let cleanTag = tag
-        .toString()
-        .replace(/^#/, '');
-        
-      cleanTag = performRegexpOnTag(yarleOptions, cleanTag)
-      if (tagOptions) {
-        cleanTag = cleanTag.replace(new RegExp(escapeStringRegexp(tagOptions.separatorInEN), 'g'), tagOptions.replaceSeparatorWith);
+      let cleanTag: string
+      if (tagOptions?.characterMap) {
+        cleanTag = performRegexpOnTag(yarleOptions, cleanTag)
+        cleanTag = CharacterMap.apply(tagOptions.characterMap, tag.toString())
+      } else {
+        cleanTag = tag
+          .toString()
+          .replace(/^#/, '');
+
+        cleanTag = performRegexpOnTag(yarleOptions, cleanTag)
+        if (tagOptions) {
+          cleanTag = cleanTag.replace(new RegExp(escapeStringRegexp(tagOptions.separatorInEN), 'g'), tagOptions.replaceSeparatorWith);
+        }
+
+        const replaceSpaceWith = (tagOptions && tagOptions.replaceSpaceWith) || '-';
+
+        cleanTag = cleanTag.replace(/ /g, replaceSpaceWith);
+        if (yarleOptions.removeUnicodeCharsFromTags) {
+          cleanTag = cleanTag.replace(/[^\w/\\-]/gu, '')
+        }
       }
-
-
-      const replaceSpaceWith = (tagOptions && tagOptions.replaceSpaceWith) || '-';
-
-      cleanTag = cleanTag.replace(/ /g, replaceSpaceWith);
-      if (yarleOptions.removeUnicodeCharsFromTags)
-        cleanTag = cleanTag.replace(/[^\wА-Яа-я0-9_/\\-]/g, '')
       return `${yarleOptions.useHashTags ? '#' : ''}${cleanTag}`;
     });
 

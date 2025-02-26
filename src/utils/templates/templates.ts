@@ -3,7 +3,6 @@ import { cloneDeep } from 'lodash';
 
 import { YarleOptions } from '../../YarleOptions';
 import { NoteData } from '../../models/NoteData';
-import { TOCNoteName } from './../../constants';
 import * as T from './placeholders/metadata-placeholders';
 import * as M from './match-all';
 import {
@@ -54,6 +53,7 @@ import {
   removeEvernoteLinkPlaceholder,
   removeEvernoteGuidPlaceholder
  } from './remove-functions';
+import { isTOC } from '../is-toc';
 
 export const applyTemplate = (noteData: NoteData, yarleOptions: YarleOptions) => {
 
@@ -61,19 +61,19 @@ export const applyTemplate = (noteData: NoteData, yarleOptions: YarleOptions) =>
 
   result = applyTitleTemplate(noteData, result, () => noteData.title);
   result = applyTagsTemplate(noteData, result, () => !yarleOptions.skipTags);
-  result = applyTagsArrayTemplate(noteData, result, () => !yarleOptions.skipTags );
+  result = applyTagsArrayTemplate(noteData, result, () => !yarleOptions.skipTags);
   result = applyTagsYamlListTemplate(noteData, result, () => !yarleOptions.skipTags);
-  result = noteData.title === TOCNoteName
+  result = isTOC(noteData.title)
     ? removeEvernoteLinkPlaceholder(result)
     : applyEvernoteLinkTemplate(noteData, result)
 
-  result = noteData.title === TOCNoteName
+  result = isTOC(noteData.title)
     ? removeEvernoteGuidPlaceholder(result) 
     : applyEvernoteGuidTemplate(noteData, result)
 
   result = applyContentTemplate(noteData, result, () => noteData.markdownContent);
 
-  result = (yarleOptions.keepOriginalHtml && noteData.linkToOriginal)
+  result = (!yarleOptions.skipLinkToOriginal && noteData.linkToOriginal)
       ? applyLinkToOriginalTemplate(noteData, result)
       : removeLinkToOriginalTemplate(result);
 

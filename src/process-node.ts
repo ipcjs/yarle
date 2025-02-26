@@ -10,10 +10,10 @@ import {
 } from './utils';
 import { yarleOptions } from './yarle';
 import { prepareContentByExtractingDataUrlResources, processResources } from './process-resources';
-import { convertHtml2MdContent } from './convert-html-to-md';
+import { convertHtml2MdContent, convertHtml2EmbedHtml } from './convert-html-to-md';
 import { convert2Html } from './convert-to-html';
 import { EvernoteNoteData, NoteData } from './models/NoteData';
-import { loggerInfo } from './utils/loggerInfo';
+import { loggerError, loggerInfo } from './utils/loggerInfo';
 import { RuntimePropertiesSingleton } from './runtime-properties';
 import { LanguageFactory } from './outputLanguages/LanguageFactory';
 import { performRegexpOnTitle } from './utils/get-title';
@@ -40,14 +40,17 @@ export const processNode = (pureNote: EvernoteNoteData, notebookName: string): v
   loggerInfo(`Converting note "${noteData.title}"...`);
 
   try {
-    let htmlContent = noteData.content; 
+    let htmlContent = noteData.content;
     if (hasResource(pureNote)) {
       htmlContent = processResources(pureNote);
     }
     htmlContent = prepareContentByExtractingDataUrlResources(pureNote, htmlContent);
+    const metaData = getMetadata(pureNote, notebookName);
 
-    noteData.markdownContent = convertHtml2MdContent(yarleOptions, htmlContent);
-    noteData = {...noteData, ...getMetadata(pureNote, notebookName)};
+    noteData.markdownContent = yarleOptions.embedHtmlForWebClips && metaData.isWebClip
+      ? convertHtml2EmbedHtml(htmlContent)
+      : convertHtml2MdContent(yarleOptions, htmlContent);
+    noteData = { ...noteData, ...metaData };
     noteData.tags = getTags(pureNote);
 
     noteData.appliedMarkdownContent = applyTemplate(noteData, yarleOptions);
@@ -58,7 +61,7 @@ export const processNode = (pureNote: EvernoteNoteData, notebookName: string): v
 
     targetLanguage.noteProcess(yarleOptions, noteData, pureNote)
 
-    if (yarleOptions.keepOriginalHtml) {
+    if (yarleOptions.keepOriginalHtml || (yarleOptions.keepOriginalHtmlForWebClips && metaData.isWebClip)) {
       noteData.htmlContent = htmlContent;
       convert2Html(noteData);
       saveHtmlFile(noteData, pureNote);
@@ -66,7 +69,7 @@ export const processNode = (pureNote: EvernoteNoteData, notebookName: string): v
 
   } catch (e) {
     // tslint:disable-next-line:no-console
-    loggerInfo(`Failed to convert note: ${noteData.title}, ${JSON.stringify(e)}`);
+    loggerError(`Failed to convert note: ${noteData.title}`, e);
   }
   // tslint:disable-next-line:no-console
   const dateFinished: Date = new Date();

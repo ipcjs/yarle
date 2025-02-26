@@ -14,9 +14,10 @@ export const imagesRule = {
     if (!nodeProxy.src) {
       return '';
     }
-    const value = nodeProxy.src.value;
-    const widthParam = node.width || '';
-    const heightParam = node.height || '';
+    const value: string = nodeProxy.src.value;
+    const text: string = nodeProxy.alt?.value || value.split('/').reverse()[0] || ''
+    const widthParam = node.width || nodeProxy.width?.value?.replace('px', '') || '';
+    const heightParam = node.height || nodeProxy.height?.value?.replace('px', '') || '';
     let realValue = value;
     if (yarleOptions.sanitizeResourceNameSpaces) {
       realValue = realValue.replace(/ /g, yarleOptions.replacementChar);
@@ -31,11 +32,11 @@ export const imagesRule = {
 
         return `![](${realValue}${sizeString})`;
       } else if (yarleOptions.imageSizeFormat === ImageSizeFormat.ObsidianMD) {
-        sizeString = (widthParam || heightParam) ? `${widthParam || 0}x${heightParam || 0}` : '';
-        if (realValue.startsWith('./') || realValue.startsWith('..')) {
-          return sizeString != '' ? `![[${realValue}\\|${sizeString}]]` : `![[${realValue}${sizeString}]]`;
+        sizeString = (widthParam || heightParam) ? `|${widthParam || 0}x${heightParam || 0}` : '';
+        if (realValue.startsWith('./') || realValue.startsWith('..')) {
+          return `![[${realValue}${sizeString}]]`;
         } else {
-          return `![${sizeString}](${realValue})`;
+          return `![${text}${sizeString}](${realValue})`;
         }
       }
     }
@@ -44,8 +45,6 @@ export const imagesRule = {
       return `![[${realValue}]]`;
     }
 
-    const srcSpl = nodeProxy.src.value.split('/');
-
-    return `![${srcSpl[srcSpl.length - 1]}](${realValue})`;
+    return `![${text}](${realValue})`;
   },
 };

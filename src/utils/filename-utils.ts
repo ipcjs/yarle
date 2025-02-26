@@ -14,44 +14,32 @@ import { getCreationTime } from './content-utils';
 import { escapeStringRegexp } from './escape-string-regexp';
 import { isLogseqJournal } from './is-logseq-journal';
 import { closest } from 'fastest-levenshtein';
+import { CharacterMap } from '../CharacterMap';
 import { EvernoteNoteData } from '../models';
-
-const applyCharacterMapSafely = (title: string): string => {
-  return applyCharacterMap(title).replace(/[/\\?%*:|"<>\[\]\+]/g, '-');
-}
-const applyCharacterMap = (title: string): string => {
-  let appliedTitle = title;
-  try{
-    for (const key of Object.keys(yarleOptions.replacementCharacterMap)){
-      const replacement = yarleOptions.replacementCharacterMap[key as any];
-
-      const regex: RegExp = new RegExp(escapeStringRegexp(key), 'g');
-      appliedTitle = appliedTitle.replace(regex, replacement)
-    }
-  }catch(e){
-    console.log(e)
-  }
-  console.log(appliedTitle)
-  return appliedTitle;
-}
 
 export const normalizeFilenameString = (title: string) => {
   // Allow setting a specific replacement character for file and resource names
   // Default to a retrocompatible value
-  const normalizedTitle = sanitize(applyCharacterMap(title), {replacement: yarleOptions.replacementChar || '_'}).replace(/[\[\]\#\^]/g, '').replace(/^\./g, '');
-  console.log(normalizedTitle)
+  const normalizedTitle = sanitize(CharacterMap.apply(yarleOptions.replacementCharacterMap, title), { replacement: yarleOptions.replacementChar || '_' })
+    .replace(/[\[\]\#\^]/g, '') // match characters that interferes with links: [ ] # | ^
+    // Obsidian cann't recognize hidden files starting with a dot.
+    // @see https://forum.obsidian.md/t/enable-use-of-hidden-files-and-folders-starting-with-a-dot-dotfiles-dotfolders-within-obsidian/26908
+    .replace(/^\.+/, '')
+  console.log(normalizedTitle);
   return normalizedTitle;
-  ;
 };
 
-export const getFileIndex = (dstPath: string, fileNamePrefix: string): number | string => {
+export const getFileIndex = (dstPath: string, fileNamePrefix: string): number => {
   const index = fs
     .readdirSync(dstPath)
     .filter(file => {
       // make sure we get the first copy with no count suffix or the copies whose filename changed
       // drop the extension to compare with filename prefix
       const filePrefix = file.split('.').slice(0, -1).join('.');
-      return filePrefix.toLowerCase().startsWith(fileNamePrefix.toLowerCase());
+      const escapedFilePrefix = escapeStringRegexp(fileNamePrefix);
+      const fileWithSameName = filePrefix.match(new RegExp(`${escapedFilePrefix}\\.\\d+`, 'i'));
+
+      return filePrefix.toLowerCase() === fileNamePrefix.toLowerCase() || fileWithSameName;
     })
     .length;
 
@@ -71,8 +59,8 @@ export const getResourceFileProperties = (workDir: string, resource: any): Resou
 			? fileNamePrefix.slice(0, lastIdx)
 			: fileNamePrefix;fileNamePrefix.includes('.') ? fileNamePrefix.split('.').slice(0, -1).join('.') : fileNamePrefix;
   }
-  fileName = applyCharacterMapSafely(fileName);
-  extension = applyCharacterMapSafely(extension);
+  fileName = CharacterMap.applySafely(yarleOptions.replacementCharacterMap, fileName);
+  extension = CharacterMap.applySafely(yarleOptions.replacementCharacterMap, extension);
   if (yarleOptions.sanitizeResourceNameSpaces) {
     fileName = fileName.replace(/ /g, yarleOptions.replacementChar);
   }
@@ -159,8 +147,10 @@ export const getNoteName = (dstPath: string, note: EvernoteNoteData): string => 
 };
 
 export const getNotebookName = (enexFile: string): string => {
-  const notebookName = normalizeFilenameString(path.basename(enexFile, '.enex'));
-
+  let notebookName = normalizeFilenameString(path.basename(enexFile, '.enex'));
+  if (yarleOptions.nestedNotebookSeparator) {
+    notebookName = notebookName.replace(yarleOptions.nestedNotebookSeparator, path.sep)
+  }
   return notebookName;
 };
 
