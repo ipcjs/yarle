@@ -105,3 +105,11 @@ export const convertHtml2MdContent = (yarleOptions: YarleOptions, htmlContent: s
 
     return contentInMd && contentInMd !== 'undefined' ? performRegexpOnContent(yarleOptions, contentInMd): '';
 };
+
+export const convertHtml2EmbedHtml = (htmlContent: string): string => {
+    const contentNode = new JSDOM(htmlContent)
+        .window.document
+        .getElementsByTagName('en-note')
+        .item(0);
+    return contentNode.outerHTML;
+}

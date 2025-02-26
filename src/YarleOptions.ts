@@ -12,6 +12,7 @@ export interface YarleOptions {
     outputMarkdownDirName?: string;
     keepOriginalHtml?: boolean;
     keepOriginalHtmlForWebClips?: boolean;
+    embedHtmlForWebClips?: boolean;
     posixHtmlPath?: boolean;
     htmlTemplateFile?: string;
     currentHtmlTemplate?: string;

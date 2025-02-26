@@ -10,7 +10,7 @@ import {
 } from './utils';
 import { yarleOptions } from './yarle';
 import { prepareContentByExtractingDataUrlResources, processResources } from './process-resources';
-import { convertHtml2MdContent } from './convert-html-to-md';
+import { convertHtml2MdContent, convertHtml2EmbedHtml } from './convert-html-to-md';
 import { convert2Html } from './convert-to-html';
 import { EvernoteNoteData, NoteData } from './models/NoteData';
 import { loggerError, loggerInfo } from './utils/loggerInfo';
@@ -40,14 +40,17 @@ export const processNode = (pureNote: EvernoteNoteData, notebookName: string): v
   loggerInfo(`Converting note "${noteData.title}"...`);
 
   try {
-    let htmlContent = noteData.content; 
+    let htmlContent = noteData.content;
     if (hasResource(pureNote)) {
       htmlContent = processResources(pureNote);
     }
     htmlContent = prepareContentByExtractingDataUrlResources(pureNote, htmlContent);
+    const metaData = getMetadata(pureNote, notebookName);
 
-    noteData.markdownContent = convertHtml2MdContent(yarleOptions, htmlContent);
-    noteData = {...noteData, ...getMetadata(pureNote, notebookName)};
+    noteData.markdownContent = yarleOptions.embedHtmlForWebClips && metaData.isWebClip
+      ? convertHtml2EmbedHtml(htmlContent)
+      : convertHtml2MdContent(yarleOptions, htmlContent);
+    noteData = { ...noteData, ...metaData };
     noteData.tags = getTags(pureNote);
 
     noteData.appliedMarkdownContent = applyTemplate(noteData, yarleOptions);
@@ -58,7 +61,7 @@ export const processNode = (pureNote: EvernoteNoteData, notebookName: string): v
 
     targetLanguage.noteProcess(yarleOptions, noteData, pureNote)
 
-    if (yarleOptions.keepOriginalHtml || (yarleOptions.keepOriginalHtmlForWebClips && noteData.isWebClip)) {
+    if (yarleOptions.keepOriginalHtml || (yarleOptions.keepOriginalHtmlForWebClips && metaData.isWebClip)) {
       noteData.htmlContent = htmlContent;
       convert2Html(noteData);
       saveHtmlFile(noteData, pureNote);

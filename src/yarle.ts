@@ -45,6 +45,7 @@ export const defaultYarleOptions: YarleOptions = {
   outputMarkdownDirName: 'notes',
   keepOriginalHtml: false,
   keepOriginalHtmlForWebClips: false,
+  embedHtmlForWebClips: false,
   posixHtmlPath: false,
   isMetadataNeeded: false,
   isNotebookNameNeeded: false,
