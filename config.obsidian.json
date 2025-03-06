@@ -7,7 +7,7 @@
     "outputDir": "out",
     "keepOriginalHtml": false,
     "keepOriginalHtmlForWebClips": false,
-    "embedHtmlForWebClips": true,
+    "embedHtmlForWebClips": false,
     "posixHtmlPath": true,
     "isMetadataNeeded": false,
     "isNotebookNameNeeded": false,
