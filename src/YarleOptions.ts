@@ -5,18 +5,23 @@ import { CharacterMap } from 'CharacterMap';
 import { ImageSizeFormat } from 'image-size-format';
 
 export interface YarleOptions {
-    enexDir?: string; // used by command line
     enexSources?: Array<string>; // used by the UI
     templateFile?: string;
     currentTemplate?: string;
     outputDir?: string;
+    outputMarkdownDirName?: string;
     keepOriginalHtml?: boolean;
+    keepOriginalHtmlForWebClips?: boolean;
+    embedHtmlForWebClips?: boolean;
     posixHtmlPath?: boolean;
+    htmlTemplateFile?: string;
+    currentHtmlTemplate?: string;
     isMetadataNeeded?: boolean;
     isNotebookNameNeeded?: boolean;
     isZettelkastenNeeded?: boolean;
     useZettelIdAsFilename?: boolean;
     plainTextNotesOnly?: boolean;
+    skipLinkToOriginal?: boolean;
     skipLocation?: boolean;
     skipAltitude?: boolean;
     skipCreationTime?: boolean;
@@ -58,6 +63,7 @@ export interface YarleOptions {
     monospaceIsCodeBlock?: boolean;
     dateFormat?: string;
     nestedTags?: TagSeparatorReplaceOptions;
+    nestedNotebookSeparator?: string;
     imageSizeFormat?: ImageSizeFormat;
     keepImageSize?: boolean;
     keepOriginalAmountOfNewlines?: boolean;
@@ -71,6 +77,8 @@ export interface YarleOptions {
     useUniqueUnknownFileNames?: boolean;
     useLevenshteinForLinks?: boolean;
     keepEvernoteLinkIfNoNoteFound?: boolean;
+    keepEvernoteExternalLinks?: boolean;
     convertColorsToMDHighlight?: boolean;
     globalReplacementSettings?: Array<SearchAndReplace>;
+    indentCharacter?: string;
 }

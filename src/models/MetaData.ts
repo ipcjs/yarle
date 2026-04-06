@@ -5,6 +5,7 @@ export interface MetaData {
     author?: string;
     source?: string;
     sourceUrl?: string;
+    isWebClip?: boolean;
     sourceApplication?: string;
     location?: string;
     altitude?: string;

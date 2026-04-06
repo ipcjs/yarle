@@ -1,5 +1,6 @@
 .nyc_output
-.vscode
+# .vscode
+.idea/
 coverage
 node_modules
 dist
@@ -16,3 +17,4 @@ release-builds
 conversion.log
 error.log
 bckp/
+*.cpuprofile
