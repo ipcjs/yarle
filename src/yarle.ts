@@ -86,6 +86,8 @@ const setOptions = (options: YarleOptions): void => {
 
   let template = (yarleOptions.templateFile) ? fs.readFileSync(yarleOptions.templateFile, 'utf-8') : defaultTemplate;
   template = yarleOptions.currentTemplate ? yarleOptions.currentTemplate : template;
+  // The line break of the output file is \n, the \r\n in the template needs to be converted
+  template = template.replaceAll('\r\n', '\n')
   const htmlTemplate = yarleOptions.htmlTemplateFile ? fs.readFileSync(yarleOptions.htmlTemplateFile, 'utf-8') : defaultHtmlTemplate;
 
   /*if (yarleOptions.templateFile) {*/
