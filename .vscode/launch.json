@@ -47,5 +47,17 @@
             },
             "preLaunchTask": "npm: build:watch",
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "fix-md-files",
+            "program": "${workspaceFolder}/dist/fix-md-files.js",
+            "args": [
+                // 修改这里为目标文件夹路径
+                // "${env:DROPBOX}${/}Notes${/}Evernote"
+                "${workspaceFolder}/out/notes"
+            ],
+            "preLaunchTask": "npm: build:watch",
+        },
     ]
 }
